@@ -1,0 +1,217 @@
+/* ============ 鹈鹕骑行 3D · UI 样式 ============ */
+:root{
+  --ink:#13212e;
+  --ink-soft:#4a6072;
+  --paper:rgba(255,255,255,.72);
+  --paper-solid:#fdfefe;
+  --line:rgba(19,33,46,.10);
+  --shadow:0 18px 50px -18px rgba(12,30,48,.45), 0 4px 14px -6px rgba(12,30,48,.22);
+  --accent:#ff8a3d;
+  --accent-2:#2fb8a6;
+  --radius:18px;
+  --blur:blur(16px) saturate(1.4);
+  color-scheme:light;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  margin:0;overflow:hidden;background:#0e1a26;color:var(--ink);
+  font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  user-select:none;
+}
+#stage{position:fixed;inset:0}
+#stage canvas{display:block;width:100%;height:100%;touch-action:none}
+
+/* ---------- 顶部 ---------- */
+#topbar{
+  position:fixed;top:0;left:0;right:0;padding:18px 22px;
+  display:flex;justify-content:space-between;align-items:flex-start;gap:16px;
+  pointer-events:none;z-index:10;
+  background:linear-gradient(180deg,rgba(8,20,32,.42),rgba(8,20,32,0));
+  transition:opacity .4s;
+}
+.brand{display:flex;gap:13px;align-items:center;pointer-events:auto}
+.brand .logo{
+  width:52px;height:52px;border-radius:16px;flex:none;
+  background:linear-gradient(150deg,#ffd9a8,#ff9a5c 55%,#f2643f);
+  box-shadow:0 10px 24px -8px rgba(242,100,63,.65), inset 0 1px 0 rgba(255,255,255,.5);
+  display:grid;place-items:center;font-size:27px;
+  animation:logoBob 3.6s ease-in-out infinite;
+}
+@keyframes logoBob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-4px) rotate(4deg)}}
+.brand h1{margin:0;font-size:19px;font-weight:800;letter-spacing:.5px;color:#fff;text-shadow:0 2px 12px rgba(6,18,30,.55)}
+.brand h1 span{font-weight:600;font-size:11px;letter-spacing:2.4px;opacity:.72;margin-left:6px}
+.brand p{margin:3px 0 0;font-size:12px;color:rgba(255,255,255,.82);text-shadow:0 1px 8px rgba(6,18,30,.6);max-width:44ch;line-height:1.45}
+
+/* ---------- HUD 仪表 ---------- */
+#hud{
+  pointer-events:auto;display:flex;gap:10px;align-items:stretch;
+}
+.gauge{
+  width:148px;padding:10px 12px 8px;border-radius:var(--radius);
+  background:var(--paper);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  border:1px solid rgba(255,255,255,.55);box-shadow:var(--shadow);
+  display:flex;flex-direction:column;align-items:center;
+}
+.gauge svg{width:124px;height:70px;display:block}
+.gauge .num{font-size:26px;font-weight:800;line-height:1;margin-top:-30px;font-variant-numeric:tabular-nums;letter-spacing:-.5px}
+.gauge .num small{font-size:11px;font-weight:600;color:var(--ink-soft);margin-left:3px}
+.gauge .lab{font-size:10px;letter-spacing:2px;color:var(--ink-soft);margin-top:3px;font-weight:700}
+.stats{display:flex;flex-direction:column;gap:8px;justify-content:center;min-width:132px}
+.stat{
+  padding:8px 12px;border-radius:13px;background:var(--paper);
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  border:1px solid rgba(255,255,255,.55);box-shadow:var(--shadow);
+}
+.stat b{display:block;font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.15}
+.stat i{font-style:normal;font-size:10px;letter-spacing:1.6px;color:var(--ink-soft);font-weight:700}
+
+/* ---------- 控制面板 ---------- */
+#panel{
+  position:fixed;top:96px;right:22px;width:272px;z-index:20;
+  border-radius:22px;padding:16px 16px 14px;
+  background:var(--paper);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  border:1px solid rgba(255,255,255,.6);box-shadow:var(--shadow);
+  display:flex;flex-direction:column;gap:14px;
+  transform-origin:top right;transition:transform .38s cubic-bezier(.3,1.3,.4,1),opacity .3s;
+  max-height:calc(100vh - 130px);overflow:auto;scrollbar-width:thin;
+}
+#panel.hide{transform:scale(.86) translateY(-8px);opacity:0;pointer-events:none}
+.grp>label,.grp>.cap{
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-size:11px;font-weight:800;letter-spacing:1.6px;color:var(--ink-soft);margin-bottom:7px;
+}
+.grp .val{font-size:12px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums}
+input[type=range]{
+  -webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:99px;outline:none;
+  background:linear-gradient(90deg,var(--accent) var(--p,40%),rgba(19,33,46,.14) var(--p,40%));
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:19px;height:19px;border-radius:50%;background:#fff;cursor:pointer;
+  box-shadow:0 2px 8px rgba(12,30,48,.4), 0 0 0 2px var(--accent) inset;border:none;
+}
+input[type=range]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;background:#fff;cursor:pointer;box-shadow:0 0 0 2px var(--accent) inset;border:none}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{
+  flex:1 1 auto;min-width:56px;padding:7px 9px;border-radius:11px;border:1px solid var(--line);
+  background:rgba(255,255,255,.66);font-size:12px;font-weight:700;color:var(--ink);
+  cursor:pointer;transition:.18s;white-space:nowrap;text-align:center;
+}
+.chip:hover{background:#fff;transform:translateY(-1px)}
+.chip.on{background:linear-gradient(150deg,#2c3e50,#1b2836);color:#fff;border-color:transparent;box-shadow:0 6px 16px -6px rgba(20,35,50,.7)}
+.swatches{display:flex;gap:9px}
+.sw{
+  width:34px;height:34px;border-radius:11px;cursor:pointer;border:2px solid transparent;
+  box-shadow:0 4px 12px -4px rgba(12,30,48,.5), inset 0 1px 0 rgba(255,255,255,.45);
+  transition:.18s;position:relative;
+}
+.sw:hover{transform:translateY(-2px) scale(1.06)}
+.sw.on{border-color:#fff;box-shadow:0 0 0 2px var(--ink),0 4px 12px -4px rgba(12,30,48,.5)}
+.toggles{display:flex;flex-direction:column;gap:8px}
+.tg{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:600;cursor:pointer}
+.tg .sw2{
+  width:40px;height:22px;border-radius:99px;background:rgba(19,33,46,.18);position:relative;transition:.22s;flex:none;
+}
+.tg .sw2::after{
+  content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;
+  box-shadow:0 2px 6px rgba(12,30,48,.35);transition:.22s;
+}
+.tg.on .sw2{background:linear-gradient(90deg,var(--accent-2),#3ad0bb)}
+.tg.on .sw2::after{left:20px}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn{
+  padding:10px 8px;border-radius:12px;border:none;cursor:pointer;font:inherit;font-size:13px;font-weight:700;
+  background:linear-gradient(150deg,#33475a,#1d2b39);color:#fff;transition:.18s;
+  box-shadow:0 8px 18px -8px rgba(20,40,60,.8);
+}
+.btn:hover{transform:translateY(-1.5px);filter:brightness(1.12)}
+.btn:active{transform:translateY(0)}
+.btn.warm{background:linear-gradient(150deg,#ffb163,#f2643f)}
+.btn.wide{grid-column:1/-1}
+
+/* 面板开关按钮 */
+#panelToggle{
+  position:fixed;top:96px;right:22px;z-index:21;width:44px;height:44px;border-radius:14px;border:none;cursor:pointer;
+  background:var(--paper);backdrop-filter:var(--blur);box-shadow:var(--shadow);font-size:19px;
+  display:grid;place-items:center;transition:.25s;opacity:0;pointer-events:none;transform:scale(.7);
+}
+#panelToggle.show{opacity:1;pointer-events:auto;transform:scale(1)}
+
+/* ---------- 底部提示 & 触屏 ---------- */
+#hint{
+  position:fixed;left:22px;bottom:18px;z-index:10;pointer-events:none;
+  display:flex;gap:6px;flex-wrap:wrap;max-width:52%;
+}
+#hint span{
+  font-size:11px;font-weight:600;color:rgba(255,255,255,.9);text-shadow:0 1px 6px rgba(6,18,30,.7);
+  background:rgba(10,22,34,.34);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(6px);
+  padding:4px 9px;border-radius:99px;
+}
+#touch{position:fixed;left:0;right:0;bottom:0;z-index:15;display:none;justify-content:space-between;padding:0 18px 20px;pointer-events:none}
+#touch .pad{display:flex;gap:12px;pointer-events:auto}
+.tbtn{
+  width:62px;height:62px;border-radius:50%;border:1px solid rgba(255,255,255,.5);
+  background:rgba(255,255,255,.24);backdrop-filter:blur(10px);color:#fff;font-size:23px;font-weight:800;
+  display:grid;place-items:center;box-shadow:var(--shadow);touch-action:none;
+}
+.tbtn:active{background:rgba(255,255,255,.45)}
+.tbtn.bell{background:rgba(255,138,61,.55)}
+
+/* ---------- Toast ---------- */
+#toast{
+  position:fixed;left:50%;bottom:34px;transform:translate(-50%,14px);z-index:40;
+  background:rgba(14,26,38,.86);color:#fff;font-size:13px;font-weight:600;
+  padding:9px 18px;border-radius:99px;box-shadow:var(--shadow);backdrop-filter:blur(8px);
+  opacity:0;pointer-events:none;transition:.32s;
+}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- 加载页 ---------- */
+#loader{
+  position:fixed;inset:0;z-index:100;display:grid;place-items:center;
+  background:radial-gradient(900px 500px at 50% 30%,#2b5f86,#10243a 70%,#0a1725);
+  transition:opacity .7s ease .1s;
+}
+#loader.done{opacity:0;pointer-events:none}
+.ld{display:flex;flex-direction:column;align-items:center;gap:18px;width:min(86vw,340px)}
+.ld .bird{font-size:56px;animation:ldFly 1.5s ease-in-out infinite}
+@keyframes ldFly{0%,100%{transform:translateX(-16px) rotate(-6deg)}50%{transform:translateX(16px) rotate(6deg)}}
+.ld h2{margin:0;color:#fff;font-size:17px;letter-spacing:3px;font-weight:800}
+.ld .bar{width:100%;height:5px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden}
+.ld .bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#ffd9a8,#ff8a3d);transition:width .3s}
+.ld p{margin:0;color:rgba(255,255,255,.66);font-size:12px;letter-spacing:1px;min-height:16px}
+
+/* ---------- 兜底 ---------- */
+#fallback{
+  position:fixed;inset:0;z-index:200;display:none;place-items:center;text-align:center;padding:30px;
+  background:#10243a;color:#fff;
+}
+#fallback.show{display:grid}
+#fallback div{max-width:420px;line-height:1.7;font-size:14px}
+
+@media (max-width:900px){
+  #topbar{padding:12px 14px}
+  .brand p{display:none}
+  .brand .logo{width:44px;height:44px;font-size:22px}
+  .brand h1{font-size:16px}
+  #hud{gap:8px}
+  .gauge{width:118px;padding:8px 8px 6px}
+  .gauge svg{width:100px;height:58px}
+  .gauge .num{font-size:21px;margin-top:-25px}
+  .stats{min-width:96px}
+  .stat b{font-size:13px}
+  .stat i{font-size:9px}
+  #panel{
+    top:auto;bottom:0;left:0;right:0;width:100%;border-radius:22px 22px 0 0;
+    max-height:56vh;padding-bottom:22px;
+  }
+  #panel.hide{transform:translateY(105%)}
+  #panelToggle{top:auto;bottom:18px;right:14px}
+  #hint{display:none}
+  #touch{display:flex}
+  .btns{grid-template-columns:1fr 1fr 1fr 1fr}
+}
+@media (max-width:420px){
+  .stats .stat:nth-child(2){display:none}
+}

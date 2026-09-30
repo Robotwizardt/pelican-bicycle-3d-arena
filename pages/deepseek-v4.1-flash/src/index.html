@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0b1020">
+<meta name="description" content="一只鹈鹕骑自行车的程序化 3D 交互场景：程序化几何 / 两级 IK / 自研后期管线 / 昼夜与潮汐 / WebAudio 合成音效。Model: deepseek-v4.1-flash">
+<title>鹈鹕骑士 3D · Pelican Rider · deepseek-v4.1-flash</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%F0%9F%90%A6%3C/text%3E%3C/svg%3E">
+<!--INLINE_CSS-->
+</head>
+<body>
+<div id="app">
+  <canvas id="scene" aria-label="3D 场景画布"></canvas>
+
+  <!-- ============ 加载层 ============ -->
+  <div id="boot" class="overlay">
+    <div class="boot-card">
+      <div class="boot-bird">🐦</div>
+      <h1>鹈鹕骑士 <span>3D</span></h1>
+      <p class="boot-sub">Pelican Rider · 程序化几何 / 双脚 IK 踩踏 / 自研后期管线</p>
+      <div class="bar"><i id="boot-bar"></i></div>
+      <div id="boot-msg" class="boot-msg">正在装配辐条…</div>
+      <div class="boot-meta">model <b>deepseek-v4.1-flash</b> · three.js · 单文件构建 %BUILD_TIME%</div>
+    </div>
+  </div>
+
+  <!-- ============ HUD ============ -->
+  <header id="topbar">
+    <div class="brand"><span class="logo">🦩</span><div><b>鹈鹕骑士</b><i>Pelican Rider 3D</i></div></div>
+    <div id="stats-strip" class="stats-strip"></div>
+    <div class="top-actions">
+      <button class="icon-btn" data-action="help" title="帮助 / 按键 (H)">?</button>
+      <button class="icon-btn" data-action="sound" title="声音开关 (M)">🔈</button>
+      <button class="icon-btn" data-action="fullscreen" title="全屏 (F)">⛶</button>
+    </div>
+  </header>
+
+  <div id="hud-left" class="panel">
+    <canvas id="speedo" width="240" height="240"></canvas>
+    <div class="gauge-row">
+      <div class="gauge"><span id="v-cad">0</span><em>踏频 rpm</em></div>
+      <div class="gauge"><span id="v-gear">0.00</span><em>里程 km</em></div>
+      <div class="gauge"><span id="v-pow">100</span><em>体力 %</em></div>
+    </div>
+  </div>
+
+  <div id="hud-right" class="panel">
+    <div class="row"><span>时刻</span><b id="v-clock">08:24</b></div>
+    <div class="row"><span>天光</span><b id="v-phase">清晨</b></div>
+    <div class="row"><span>里程</span><b id="v-dist">0.00 km</b></div>
+    <div class="row"><span>爬升</span><b id="v-climb">0 m</b></div>
+    <div class="row"><span>气温</span><b id="v-temp">21°C</b></div>
+    <div class="row"><span>风</span><b id="v-wind">3.2 m/s</b></div>
+    <div class="spark"><canvas id="profile" width="220" height="54"></canvas><em>高程剖面</em></div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <!-- ============ 控制条 ============ -->
+  <div id="controls" class="panel">
+    <div class="ctl-group">
+      <label>座舱配色</label>
+      <div id="livery" class="swatches"></div>
+    </div>
+    <div class="ctl-group">
+      <label>机位 <kbd>C</kbd></label>
+      <div id="cams" class="chips"></div>
+    </div>
+    <div class="ctl-group grow">
+      <label>一天中的时间 <kbd>T</kbd> · <span id="v-tod">08:24</span></label>
+      <input id="tod" type="range" min="0" max="1439" value="504" step="1">
+    </div>
+    <div class="ctl-group">
+      <label>画质</label>
+      <div id="quality" class="chips"></div>
+    </div>
+    <div class="ctl-group actions">
+      <button class="btn" data-action="ring">🔔 铃</button>
+      <button class="btn" data-action="hop">⤒ 跳</button>
+      <button class="btn" data-action="shot">📷 截图</button>
+      <button class="btn" data-action="record">⏺ 录制</button>
+      <button class="btn" data-action="obj">⬇ GLB</button>
+      <button class="btn" data-action="share">🔗 分享</button>
+    </div>
+  </div>
+
+  <!-- ============ 触屏 ============ -->
+  <div id="touch" class="hidden">
+    <div id="stick" class="stick"><i></i></div>
+    <div class="tpads">
+      <button class="tpad" data-touch="brake">刹车</button>
+      <button class="tpad" data-touch="hop">跳</button>
+      <button class="tpad" data-touch="ring">铃</button>
+      <button class="tpad" data-touch="pedal">加速</button>
+    </div>
+  </div>
+
+  <!-- ============ 帮助 ============ -->
+  <div id="help" class="overlay hidden">
+    <div class="help-card">
+      <h2>🐦 鹈鹕骑士 · 操作与实现</h2>
+      <div class="help-cols">
+        <div>
+          <h3>操作</h3>
+          <ul class="keys">
+            <li><kbd>W</kbd>/<kbd>↑</kbd> 踩踏加速 · <kbd>S</kbd>/<kbd>↓</kbd> 刹车（可倒踩后退）</li>
+            <li><kbd>A</kbd><kbd>D</kbd>/<kbd>←</kbd><kbd>→</kbd> 转向（车把 + 鸟身侧倾）</li>
+            <li><kbd>Shift</kbd> 冲刺（消耗体力）· <kbd>Space</kbd> 蹦跳 · <kbd>B</kbd> 摇铃</li>
+            <li><kbd>C</kbd> 切机位 · <kbd>V</kbd> 自动运镜 · <kbd>X</kbd> 自动骑行</li>
+            <li><kbd>T</kbd>/<kbd>Y</kbd> 时间 +2h/−2h · 拖动下方时间轴</li>
+            <li><kbd>L</kbd> 换涂装 · <kbd>Q</kbd> 画质档位 · <kbd>M</kbd> 声音开关</li>
+            <li><kbd>P</kbd> 截图 PNG · <kbd>R</kbd> 录制 WebM · <kbd>G</kbd> 导出 GLB</li>
+            <li><kbd>H</kbd> 隐藏/显示界面 · <kbd>鼠标拖拽</kbd> 环视 · <kbd>滚轮</kbd> 推拉 · 手柄可用</li>
+          </ul>
+        </div>
+        <div>
+          <h3>实现清单</h3>
+          <ul class="impl">
+            <li>程序化建模：鹈鹕 100% 由几何体拼装，无外部模型/贴图</li>
+            <li>参数化自行车：轴距/头管角/后下叉由 spec 推导出全部管件</li>
+            <li>两处解析 IK：双腿踩踏 + 双翼握把（余弦定理闭链解）</li>
+            <li>自研后期管线：HDR 半浮点 RT → 亮度提取 → 可分离高斯 → ACES + 暗角 + 色散 + 颗粒</li>
+            <li>GLSL：天空/太阳/月亮/星空、Gerstner 海面、顶点位移地形</li>
+            <li>InstancedMesh：辐条、链条节、草簇、树、岩石、路灯、云</li>
+            <li>Verlet 围巾布料、链条松弛度、水花与尘土粒子</li>
+            <li>昼夜系统：太阳高度驱动天空/雾/灯光/路灯/生物钟</li>
+            <li>WebAudio 全合成音效：轮噪、花鼓棘轮、链条、铃、刹车啸叫、海浪、夜虫</li>
+            <li>导出：PNG 截图、WebM 录屏、GLB 模型、URL 状态分享</li>
+          </ul>
+        </div>
+      </div>
+      <p class="help-foot">由 <b>deepseek-v4.1-flash</b> 生成 · 单文件 HTML · 无外部资源 · 可离线打开 · 拖动时间条看日落</p>
+      <button class="btn primary" data-action="help">开始骑行</button>
+    </div>
+  </div>
+</div>
+
+<script>window.__PELICAN_ERRORS__=[];(function(){var p=window.__PELICAN_ERRORS__;function add(s){if(p.length<40)p.push(String(s).slice(0,400));}window.addEventListener('error',function(e){add('error: '+(e.message||e.error));});window.addEventListener('unhandledrejection',function(e){add('reject: '+e.reason);});['error','warn'].forEach(function(k){var o=console[k].bind(console);console[k]=function(){try{add(k+': '+Array.prototype.map.call(arguments,function(a){return(a&&a.message)||a;}).join(' '));}catch(_){}o.apply(null,arguments);};});})();</script>
+<!--INLINE_JS-->
+</body>
+</html>

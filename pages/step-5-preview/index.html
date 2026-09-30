@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>鹈鹕骑行日记 · Pelican Ride 3D</title>
+<meta name="description" content="一只戴着水手帽、挂着鱼篓的鹈鹕骑着复古自行车的交互式 3D 场景：踩踏 IK、昼夜循环、海风音效与多机位拍摄。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E%F0%9F%90%A6%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --accent:#e8944a;
+    --panel-bg:rgba(12,20,32,.74);
+    --panel-line:rgba(255,255,255,.14);
+    --txt:#eef4ff;
+    --txt-dim:rgba(238,244,255,.62);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    margin:0;overflow:hidden;background:#101828;color:var(--txt);
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+  canvas{display:block}
+  #app{position:fixed;inset:0}
+
+  /* ---------- 加载页 ---------- */
+  #loader{
+    position:fixed;inset:0;z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;
+    background:linear-gradient(160deg,#1b3b6f 0%,#2f7fd0 45%,#8fd0f5 100%);
+    transition:opacity .8s ease,visibility .8s;
+  }
+  #loader.done{opacity:0;visibility:hidden}
+  #loader .emo{font-size:76px;animation:hop 1.15s ease-in-out infinite;filter:drop-shadow(0 12px 20px rgba(0,0,0,.35))}
+  #loader h1{margin:0;font-size:26px;letter-spacing:.16em;text-shadow:0 3px 14px rgba(0,0,0,.35)}
+  #loader .bar{width:min(320px,62vw);height:9px;border-radius:99px;background:rgba(255,255,255,.24);overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,.25)}
+  #ldBar{height:100%;width:6%;border-radius:99px;background:linear-gradient(90deg,#ffd9a0,#e8944a);transition:width .35s ease}
+  #ldMsg{font-size:14px;color:rgba(255,255,255,.9);letter-spacing:.06em;min-height:20px}
+  @keyframes hop{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-18px) rotate(4deg)}}
+
+  /* ---------- 左上标题 ---------- */
+  #title{position:fixed;top:16px;left:18px;z-index:12;pointer-events:none}
+  #title .l1{font-size:20px;font-weight:800;letter-spacing:.1em;text-shadow:0 2px 10px rgba(0,0,0,.45)}
+  #title .l2{font-size:11.5px;color:var(--txt-dim);letter-spacing:.24em;margin-top:3px;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+  #todName{display:inline-block;margin-top:8px;padding:3px 11px;border-radius:99px;font-size:11.5px;letter-spacing:.12em;
+    background:rgba(10,18,30,.5);border:1px solid var(--panel-line);backdrop-filter:blur(8px);color:#ffd9a8}
+
+  /* ---------- 控制面板 ---------- */
+  #panel{
+    position:fixed;top:16px;right:16px;z-index:14;width:264px;max-height:calc(100vh - 32px);overflow-y:auto;
+    background:var(--panel-bg);border:1px solid var(--panel-line);border-radius:18px;padding:14px;
+    backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    box-shadow:0 18px 50px rgba(0,0,0,.42);transition:transform .35s ease,opacity .35s ease;
+    scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.25) transparent;
+  }
+  #panel::-webkit-scrollbar{width:5px}
+  #panel::-webkit-scrollbar-thumb{background:rgba(255,255,255,.22);border-radius:9px}
+  #panel.hide{transform:translateX(112%);opacity:0;pointer-events:none}
+  .cap{font-size:10.5px;letter-spacing:.2em;color:var(--txt-dim);margin:0 0 7px 2px;text-transform:uppercase}
+  .blk{margin-bottom:14px}
+  .row{display:flex;gap:7px;flex-wrap:wrap}
+  .chip{
+    flex:1 1 auto;min-width:58px;padding:7px 4px;border-radius:11px;border:1px solid var(--panel-line);
+    background:rgba(255,255,255,.06);color:var(--txt);font-size:12px;cursor:pointer;text-align:center;
+    transition:.18s;font-family:inherit;
+  }
+  .chip:hover{background:rgba(255,255,255,.15)}
+  .chip.on{background:linear-gradient(150deg,var(--accent),#ffd9a0);color:#16202f;border-color:transparent;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+  .tgs{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .tg{
+    display:flex;align-items:center;justify-content:space-between;gap:6px;padding:8px 9px;border-radius:11px;
+    border:1px solid var(--panel-line);background:rgba(255,255,255,.06);color:var(--txt);
+    font-size:11.5px;cursor:pointer;transition:.18s;font-family:inherit;
+  }
+  .tg:hover{background:rgba(255,255,255,.14)}
+  .tg .sw2{width:26px;height:15px;border-radius:99px;background:rgba(255,255,255,.2);position:relative;flex:0 0 auto;transition:.2s}
+  .tg .sw2::after{content:"";position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:#fff;transition:.2s}
+  .tg.on{background:rgba(232,148,74,.26);border-color:rgba(232,148,74,.6)}
+  .tg.on .sw2{background:var(--accent)}
+  .tg.on .sw2::after{left:13px}
+  .btns{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .btn{
+    padding:9px 6px;border-radius:11px;border:1px solid var(--panel-line);background:rgba(255,255,255,.08);
+    color:var(--txt);font-size:12px;cursor:pointer;transition:.18s;font-family:inherit;font-weight:600;
+  }
+  .btn:hover{background:rgba(255,255,255,.2);transform:translateY(-1px)}
+  .btn:active{transform:translateY(0)}
+  #livery{display:flex;gap:7px;flex-wrap:wrap}
+  .sw{width:38px;height:24px;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:.18s;box-shadow:0 3px 9px rgba(0,0,0,.32)}
+  .sw:hover{transform:translateY(-2px)}
+  .sw.on{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.22)}
+  .stat{display:flex;justify-content:space-between;font-size:11.5px;padding:4px 2px;color:var(--txt-dim)}
+  .stat b{color:var(--txt);font-weight:700;font-variant-numeric:tabular-nums}
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;width:100%;height:22px;background:transparent;cursor:pointer;margin:0;
+  }
+  input[type=range]::-webkit-slider-runnable-track{
+    height:6px;border-radius:99px;
+    background:linear-gradient(90deg,var(--accent) 0 var(--p,30%),rgba(255,255,255,.18) var(--p,30%) 100%);
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:#fff;margin-top:-6px;
+    box-shadow:0 2px 8px rgba(0,0,0,.45);border:2px solid var(--accent);
+  }
+  input[type=range]::-moz-range-track{height:6px;border-radius:99px;background:rgba(255,255,255,.18)}
+  input[type=range]::-moz-range-progress{height:6px;border-radius:99px;background:var(--accent)}
+  input[type=range]::-moz-range-thumb{width:15px;height:15px;border:2px solid var(--accent);border-radius:50%;background:#fff}
+  .val{font-size:11px;color:var(--txt-dim);text-align:right;font-variant-numeric:tabular-nums}
+
+  /* ---------- 仪表盘 ---------- */
+  #hud{position:fixed;left:18px;bottom:18px;z-index:12;display:flex;align-items:flex-end;gap:12px;pointer-events:none}
+  .gauge-box{filter:drop-shadow(0 10px 26px rgba(0,0,0,.45))}
+  .stats{display:flex;flex-direction:column;gap:6px;background:rgba(10,18,30,.55);border:1px solid var(--panel-line);
+    border-radius:13px;padding:10px 13px;backdrop-filter:blur(10px);min-width:126px}
+  .st{display:flex;flex-direction:column}
+  .st span{font-size:9.5px;letter-spacing:.16em;color:var(--txt-dim)}
+  .st b{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.15}
+  .st b i{font-size:10px;font-style:normal;font-weight:500;color:var(--txt-dim);margin-left:3px}
+
+  /* ---------- 提示 ---------- */
+  #toast{
+    position:fixed;left:50%;top:26px;transform:translate(-50%,-14px);z-index:30;
+    background:rgba(10,18,30,.86);border:1px solid var(--panel-line);color:var(--txt);
+    padding:9px 20px;border-radius:99px;font-size:13.5px;letter-spacing:.04em;
+    opacity:0;pointer-events:none;transition:.32s cubic-bezier(.2,.9,.3,1.2);backdrop-filter:blur(10px);
+    box-shadow:0 12px 34px rgba(0,0,0,.4);max-width:82vw;text-align:center;
+  }
+  #toast.show{opacity:1;transform:translate(-50%,0)}
+
+  /* ---------- 移动端 ---------- */
+  #touch{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:16;display:none;gap:26px}
+  .tbtn{
+    width:66px;height:66px;border-radius:50%;border:1px solid var(--panel-line);background:rgba(12,20,32,.6);
+    color:#fff;font-size:26px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);
+    user-select:none;box-shadow:0 10px 26px rgba(0,0,0,.4);font-family:inherit;
+  }
+  .tbtn:active{background:rgba(232,148,74,.5)}
+  #bellTouch{position:fixed;right:18px;bottom:26px;z-index:16;display:none;width:66px;height:66px;border-radius:50%;
+    font-size:28px;border:1px solid var(--panel-line);background:rgba(232,148,74,.34);color:#fff;align-items:center;
+    justify-content:center;backdrop-filter:blur(10px);box-shadow:0 10px 26px rgba(0,0,0,.4)}
+  #panelToggle{position:fixed;top:16px;right:16px;z-index:15;width:42px;height:42px;border-radius:12px;display:none;
+    align-items:center;justify-content:center;background:rgba(12,20,32,.7);border:1px solid var(--panel-line);
+    color:#fff;font-size:17px;backdrop-filter:blur(10px)}
+  #panelToggle.show{display:flex}
+  #hint{position:fixed;bottom:20px;right:18px;z-index:12;font-size:11px;color:var(--txt-dim);text-align:right;
+    line-height:1.7;pointer-events:none;text-shadow:0 1px 6px rgba(0,0,0,.6)}
+  #fallback{display:none;position:fixed;inset:0;z-index:200;background:#0b1220;color:#dbe6f5;
+    align-items:center;justify-content:center;text-align:center;padding:32px;font-size:15px;line-height:2}
+  #fallback.show{display:flex}
+  @media (max-width:900px){
+    #panel{width:238px}
+    #hint{display:none}
+    #touch,#bellTouch{display:flex}
+    #hud{left:12px;bottom:104px;transform:scale(.86);transform-origin:left bottom}
+    #title .l1{font-size:17px}
+  }
+  @media (max-width:420px){
+    #panel{width:212px;padding:11px}
+    .chip{min-width:48px;font-size:11px}
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<div id="loader">
+  <div class="emo">🐦</div>
+  <h1>鹈鹕骑行日记</h1>
+  <div class="bar"><div id="ldBar"></div></div>
+  <div id="ldMsg">正在唤醒鹈鹕…</div>
+</div>
+
+<div id="fallback">😥 当前浏览器不支持 WebGL，无法渲染 3D 场景。<br>请使用较新版本的 Chrome / Edge / Safari / Firefox 打开。</div>
+
+<div id="title">
+  <div class="l1">🐦 鹈鹕骑行日记</div>
+  <div class="l2">PELICAN&nbsp;·&nbsp;RIDE&nbsp;·&nbsp;3D</div>
+  <div id="todName">☀️ 正午海风</div>
+</div>
+
+<div id="panel">
+  <div class="blk">
+    <p class="cap">时间段 · Time of Day</p>
+    <div class="row" id="todChips">
+      <button class="chip" data-tod="dawn">🌅 黎明</button>
+      <button class="chip on" data-tod="noon">☀️ 正午</button>
+      <button class="chip" data-tod="dusk">🌇 黄昏</button>
+      <button class="chip" data-tod="night">🌙 夜晚</button>
+    </div>
+    <div class="stat"><span>当前</span><b id="todVal">正午</b></div>
+  </div>
+
+  <div class="blk">
+    <p class="cap">涂装 · Livery</p>
+    <div id="livery"></div>
+    <div class="stat"><span>配色</span><b id="liveryVal">薄荷奶油</b></div>
+  </div>
+
+  <div class="blk">
+    <p class="cap">骑行速度 · Speed</p>
+    <input type="range" id="speed" min="0" max="60" step="1" value="18">
+    <div class="val" id="spdVal">18 km/h</div>
+  </div>
+
+  <div class="blk">
+    <p class="cap">机位 · Camera</p>
+    <div class="row" id="camChips">
+      <button class="chip on" data-cam="orbit">🔄 环绕</button>
+      <button class="chip" data-cam="chase">🎥 跟拍</button>
+      <button class="chip" data-cam="side">📐 侧面</button>
+      <button class="chip" data-cam="front">😮 正面</button>
+      <button class="chip" data-cam="top">🛰️ 俯视</button>
+    </div>
+  </div>
+
+  <div class="blk">
+    <p class="cap">开关 · Toggles</p>
+    <div class="tgs">
+      <button class="tg on" data-tg="autoRotate">自动环绕<span class="sw2"></span></button>
+      <button class="tg" data-tg="wireframe">线框模式<span class="sw2"></span></button>
+      <button class="tg on" data-tg="shadows">实时阴影<span class="sw2"></span></button>
+      <button class="tg" data-tg="sound">风与铃声<span class="sw2"></span></button>
+    </div>
+  </div>
+
+  <div class="blk">
+    <p class="cap">动作 · Actions</p>
+    <div class="btns">
+      <button class="btn" id="btnBell">🔔 按铃</button>
+      <button class="btn" id="btnPhoto">📷 截图</button>
+      <button class="btn" id="btnReset">↺ 重置</button>
+      <button class="btn" id="btnFull">⛶ 全屏</button>
+    </div>
+  </div>
+
+  <div class="blk" style="margin-bottom:0">
+    <p class="cap">数据 · Telemetry</p>
+    <div class="stat"><span>里程 DISTANCE</span><b id="distNum">0.00<i>km</i></b></div>
+    <div class="stat"><span>踏频 CADENCE</span><b id="cadNum">0<i>rpm</i></b></div>
+    <div class="cap" id="fpsInfo" style="margin-top:6px">—</div>
+  </div>
+</div>
+
+<div id="panelToggle">☰</div>
+
+<div id="hud">
+  <svg class="gauge-box" width="124" height="84" viewBox="0 0 124 84">
+    <path d="M 15 68 A 53 53 0 1 1 109 68" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="9" stroke-linecap="round"/>
+    <path id="gaugeArc" d="M 15 68 A 53 53 0 1 1 109 68" fill="none" stroke="url(#gg)" stroke-width="9"
+          stroke-linecap="round" stroke-dasharray="157" stroke-dashoffset="107"/>
+    <defs>
+      <linearGradient id="gg" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#7ee0c0"/><stop offset=".55" stop-color="#ffd166"/><stop offset="1" stop-color="#ff6b6b"/>
+      </linearGradient>
+    </defs>
+    <g id="gaugeNeedle" transform="rotate(-120 62 62)">
+      <line x1="62" y1="62" x2="62" y2="18" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/>
+    </g>
+    <circle cx="62" cy="62" r="6.5" fill="#fff"/>
+    <text id="spdNum" x="62" y="80" text-anchor="middle" fill="#fff" font-size="17" font-weight="800"
+          font-family="ui-monospace,SFMono-Regular,Menlo,monospace">18</text>
+  </svg>
+  <div class="stats">
+    <div class="st"><span>速度 SPEED</span><b id="spdBig">18<i>km/h</i></b></div>
+    <div class="st"><span>时间 LIGHT</span><b id="timeName" style="font-size:13px;padding-top:4px">正午</b></div>
+  </div>
+</div>
+
+<div id="touch">
+  <div class="tbtn" data-key="left">◀</div>
+  <div class="tbtn" data-key="right">▶</div>
+</div>
+<button id="btnBellTouch">🔔</button>
+
+<div id="hint">
+  拖拽旋转 · 滚轮缩放 · 右键平移<br>
+  W/S 或 ↑/↓ 加减速 · A/D 转向 · 空格 按铃 · 1-4 昼夜 · R 重置 · F 全屏 · P 截图
+</div>
+
+<div id="toast"></div>
+
+<script src="three.min.js"></script>
+<script src="OrbitControls.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

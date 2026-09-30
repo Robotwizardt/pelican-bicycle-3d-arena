@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f7f5ed" />
+  <meta name="description" content="一只鹈鹕、一辆自行车、一座没有截止日期的小岛。进入 Pelican Post，开启一段可以触摸的 3D 海岸慢骑。" />
+  <meta property="og:title" content="Pelican Post — 骑进海风里" />
+  <meta property="og:description" content="A little island. A very big beak. Absolutely nowhere to be. An interactive 3D escape." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  <title>Pelican Post · 骑进海风里</title>
+  <script type="module" crossorigin src="./assets/index-DmhmCYWI.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-D0YVdEB_.css">
+</head>
+<body>
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m9 5 11 7-11 7Z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" stroke-width="3"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.5 14.2A8.7 8.7 0 0 1 9.8 3.5a8.8 8.8 0 1 0 10.7 10.7Z"/></symbol>
+    <symbol id="i-sound" viewBox="0 0 24 24"><path d="M11 4 5 9H2v6h3l6 5Zm4 4a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></symbol>
+    <symbol id="i-muted" viewBox="0 0 24 24"><path d="M11 4 5 9H2v6h3l6 5Zm5 5 6 6m0-6-6 6"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M4 17h16l-2-3v-4a6 6 0 0 0-12 0v4Zm6 3h4M12 2v2"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M3 6h4l2-3h6l2 3h4v14H3Z"/><circle cx="12" cy="12" r="4"/></symbol>
+    <symbol id="i-expand" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 10a8 8 0 1 1 1 8M4 4v6h6"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-wind" viewBox="0 0 24 24"><path d="M2 8h13a3 3 0 1 0-3-3M2 12h17a3 3 0 1 1-3 3M4 17h5a2 2 0 1 1-2 2"/></symbol>
+    <symbol id="i-orbit" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="10" ry="4.8" transform="rotate(-30 12 12)"/><circle cx="12" cy="12" r="2"/><path d="m18 3 3 1-1 3"/></symbol>
+  </defs></svg>
+
+  <div class="site-shell">
+    <header class="site-header">
+      <a href="#" class="brand" aria-label="Pelican Post 首页">
+        <svg class="brand-mark" viewBox="0 0 50 50" aria-hidden="true"><path d="M10 34c-3-7-1-16 6-18 3-1 5 0 7 3l1-6c1-5 8-6 10-2l2 4 10 5-13 2c1 6-3 14-10 15-5 1-9-1-13-3Z" fill="currentColor"/><path d="m31 18 13 2-12 5" fill="#dca674"/><circle cx="30" cy="12" r="1.1" fill="#f7f5ed"/><path d="m17 38-3 7m11-7 2 7" stroke="currentColor" stroke-width="2"/></svg>
+        <span>pelican<span class="brand-light">post</span><span class="brand-dot">.</span></span>
+      </a>
+      <nav aria-label="主要导航">
+        <button class="nav-link active" id="nav-escape">THE ESCAPE<span>漫游</span></button>
+        <button class="nav-link" id="nav-story">OUR LITTLE STORY<span>关于小岛</span></button>
+      </nav>
+      <div class="header-right"><span class="live-dot"></span><span class="header-note">NO RUSH. JUST RIDE.</span><button id="sound-button" class="icon-button" aria-label="打开海浪声音" aria-pressed="false" data-tooltip="海浪声音 · M"><svg><use href="#i-muted"/></svg></button></div>
+    </header>
+
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="tiny-star">✳</span> A LITTLE GETAWAY, IN YOUR BROWSER</div>
+          <h1 id="hero-title">A slower pace.<br/>A <em>happier</em> place<span class="title-period">.</span></h1>
+          <p class="intro">海风刚好，今天不赶路。<br/><span>跟着鹈鹕皮普，把世界调成慢速播放。</span></p>
+          <button id="ride-button" class="ride-button"><span class="ride-label">出发，去兜风</span><svg><use href="#i-arrow"/></svg></button>
+          <div class="hero-footnote"><span class="scribble-arrow">↳</span> no destination required <span class="drawn-wave">〰</span></div>
+        </div>
+
+        <div class="scene-wrap" id="scene-wrap">
+          <div class="scene-halo"></div>
+          <div id="scene" role="region" tabindex="0" aria-label="3D 鹈鹕骑行小岛" aria-description="拖动旋转，滚轮缩放。键盘聚焦此处后，用方向键旋转，加减键缩放，R 键复位。"></div>
+          <div class="loading" id="loading" role="status"><span class="loading-sun">✳</span><p>给自行车打点气<span>PREPARING YOUR LITTLE ESCAPE</span></p><div class="loading-line"><i></i></div></div>
+          <div class="scene-label"><span class="small-dot"></span> LIVE FROM PELICAN ISLAND</div>
+          <button class="weather-card" id="weather-button" aria-label="切换到月光夜景" aria-pressed="false"><svg class="weather-icon"><use href="#i-sun"/></svg><span><strong id="weather-name">一整天的好天气</strong><small id="weather-detail">SUNSHINE & A LITTLE SEA BREEZE</small></span><span class="weather-toggle">↗</span></button>
+          <div class="postmark" aria-hidden="true"><svg viewBox="0 0 130 130"><defs><path id="stamp-circle" d="M65,65m-48,0a48,48 0 1,1 96,0a48,48 0 1,1-96,0"/></defs><circle cx="65" cy="65" r="59"/><circle cx="65" cy="65" r="37"/><text><textPath href="#stamp-circle" startOffset="0%">SENT FROM THE SLOW LANE · WITH LOVE · </textPath></text><path d="M42 73c8-14 14-14 22 0 9-14 15-14 24 0M47 81h35"/><text x="65" y="58" text-anchor="middle" class="stamp-center">AIR MAIL</text></svg></div>
+          <div class="rider-note" id="rider-note"><span>meet Pip.</span><svg viewBox="0 0 80 40"><path d="M3 3c22 35 49 28 65 11m-18 1 18-1-4 15"/></svg></div>
+          <div class="scene-bottom"><span class="drag-hint"><svg><use href="#i-orbit"/></svg> 拖动看世界 <i>·</i> 滚轮拉近一点</span><div class="view-actions"><button id="reset-button" class="icon-button" aria-label="重置镜头" data-tooltip="回到最佳视角 · R"><svg><use href="#i-reset"/></svg></button><button id="fullscreen-button" class="icon-button" aria-label="全屏体验" data-tooltip="沉浸全屏 · F"><svg><use href="#i-expand"/></svg></button></div></div>
+        </div>
+      </section>
+
+      <section class="ride-dock" aria-label="骑行控制台">
+        <div class="route-info"><div class="route-number">01<span>ROUTE</span></div><div><h2>海风环岛线 <svg viewBox="0 0 24 24"><use href="#i-arrow"/></svg></h2><p>THE COASTAL LOOP <span>·</span> 1.2 KM OF GOOD VIBES</p></div></div>
+        <div class="speed-control"><div class="control-label"><label for="speed">骑行节奏</label><span><output id="speed-output" for="speed">12</output> <small>km/h</small></span></div><input id="speed" type="range" min="4" max="28" value="12" step="1" aria-label="骑行速度，公里每小时"/><div class="speed-labels"><span>慢慢晃</span><span>追海风</span></div></div>
+        <div class="ride-metrics"><span class="metric-label">已经走过</span><div><strong id="distance">0.00</strong><span>km</span><svg class="progress-ring" viewBox="0 0 36 36" aria-hidden="true"><circle class="ring-track" cx="18" cy="18" r="14"/><circle id="distance-ring" cx="18" cy="18" r="14"/></svg></div></div>
+        <div class="dock-actions"><button id="pause-button" class="dock-play" aria-label="开始骑行" aria-pressed="false" data-tooltip="开始 / 暂停 · 空格"><svg><use href="#i-play"/></svg></button><button id="bell-button" class="icon-button" aria-label="按响自行车铃" data-tooltip="叮铃铃 · B"><svg><use href="#i-bell"/></svg></button><button id="photo-button" class="icon-button" aria-label="拍一张明信片" data-tooltip="寄一张明信片 · P"><svg><use href="#i-camera"/></svg></button></div>
+      </section>
+    </main>
+
+    <footer class="site-footer"><p><span class="footer-flower">✳</span> SOMEWHERE BETWEEN HERE & HAPPY.</p><span>一座小岛，一点自由。<span class="footer-separator">/</span> MADE TO MAKE YOU SMILE <span class="footer-smile">☺</span></span></footer>
+  </div>
+
+  <dialog id="story-dialog" class="story-dialog" aria-labelledby="story-title"><button class="dialog-close icon-button" aria-label="关闭故事"><svg><use href="#i-close"/></svg></button><div class="story-kicker">A NOTE FROM PIP</div><div class="story-illustration">✳</div><h2 id="story-title">大嘴巴。<br/>小小的<em>自由。</em></h2><p>你好，我叫皮普。别的鹈鹕喜欢飞，我更喜欢骑。</p><p>我在这座小岛上找到了最棒的路线：经过灯塔，追一会儿海风，再跟路边的花打个招呼。没有终点，也没有非完成不可的事。</p><p>如果今天有点累，就把速度调慢一点。这里的太阳可以一直等你。</p><div class="story-signature">See you by the sea,<br/><span>Pip ♡</span></div><div class="keyboard-hints"><span><kbd>Space</kbd> 出发 / 停一停</span><span><kbd>B</kbd> 按铃</span><span><kbd>N</kbd> 日夜</span><span><kbd>P</kbd> 明信片</span><span><kbd>↑ ↓ ← →</kbd> 聚焦小岛后旋转</span><span><kbd>+ −</kbd> 缩放</span></div></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="camera-flash" id="camera-flash"></div>
+  <noscript><div class="noscript">这座 3D 小岛需要 JavaScript。请开启 JavaScript 后重新访问。</div></noscript>
+</body>
+</html>

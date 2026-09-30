@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>鹈鹕骑自行车 3D · 四模型同题竞技场</title>
+<meta name="description" content="同一条初始 prompt，四个大模型各自写出的「鹈鹕骑自行车」Three.js 程序化 3D 页面，附耗时与 token 统计。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E%F0%9F%90%A6%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#0b0f16;
+    --bg-soft:#111826;
+    --card:rgba(255,255,255,.035);
+    --card-hover:rgba(255,255,255,.06);
+    --line:rgba(255,255,255,.1);
+    --line-strong:rgba(255,255,255,.2);
+    --txt:#e8eef7;
+    --txt-dim:rgba(232,238,247,.62);
+    --txt-faint:rgba(232,238,247,.38);
+    --accent:#f0a94e;
+    --accent-2:#6fd2c0;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1100px 600px at 12% -8%, rgba(240,169,78,.10), transparent 60%),
+      radial-gradient(900px 500px at 88% 4%, rgba(111,210,192,.09), transparent 60%),
+      var(--bg);
+    color:var(--txt);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+
+  /* ---------- header ---------- */
+  header{padding:76px 0 44px;text-align:center}
+  .kicker{
+    display:inline-block;font:600 12px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+    color:var(--accent);border:1px solid rgba(240,169,78,.32);border-radius:999px;
+    padding:7px 14px;margin-bottom:26px;
+  }
+  h1{margin:0 0 18px;font-size:clamp(30px,5.2vw,52px);line-height:1.16;letter-spacing:-.022em;font-weight:800}
+  h1 em{font-style:normal;color:var(--accent)}
+  .lede{margin:0 auto;max-width:730px;color:var(--txt-dim);font-size:clamp(15px,1.6vw,17.5px)}
+  .prompt-box{
+    margin:34px auto 0;max-width:800px;text-align:left;
+    background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;
+  }
+  .prompt-box .lbl{
+    display:block;font:600 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+    color:var(--txt-faint);margin-bottom:11px;
+  }
+  .prompt-box code{
+    display:block;font:13.5px/1.75 var(--mono);color:var(--txt);white-space:pre-wrap;word-break:break-word;
+  }
+  .prompt-box .add{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);color:var(--accent-2)}
+
+  /* ---------- stats strip ---------- */
+  .strip{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin:56px 0 8px;
+    background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  }
+  .strip div{background:var(--bg-soft);padding:18px 16px;text-align:center}
+  .strip b{display:block;font:700 22px/1.2 var(--mono);color:var(--txt)}
+  .strip span{display:block;margin-top:5px;font-size:12.5px;color:var(--txt-faint)}
+
+  /* ---------- section head ---------- */
+  .sec{margin:72px 0 24px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+  .sec h2{margin:0;font-size:clamp(20px,2.6vw,26px);letter-spacing:-.01em}
+  .sec p{margin:0;color:var(--txt-faint);font-size:13.5px}
+
+  /* ---------- cards ---------- */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+  .card{
+    position:relative;display:flex;flex-direction:column;
+    background:var(--card);border:1px solid var(--line);border-radius:18px;
+    padding:24px;transition:background .18s ease,border-color .18s ease,transform .18s ease;
+  }
+  .card:hover{background:var(--card-hover);border-color:var(--line-strong);transform:translateY(-3px)}
+  .card-top{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+  .rank{
+    flex:0 0 auto;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
+    font:700 13px/1 var(--mono);color:#0b0f16;background:var(--accent);
+  }
+  .card:nth-child(2) .rank{background:var(--accent-2)}
+  .card:nth-child(3) .rank{background:#9d8cf5}
+  .card:nth-child(4) .rank{background:#f08a8a}
+  .model{
+    font:600 12.5px/1 var(--mono);color:var(--txt-dim);
+    border:1px solid var(--line);border-radius:7px;padding:6px 9px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .card h3{margin:0 0 4px;font-size:19.5px;letter-spacing:-.01em}
+  .card h3 .sub{display:block;font:500 12.5px/1.5 var(--mono);color:var(--txt-faint);margin-top:6px}
+  .card p.desc{margin:12px 0 0;color:var(--txt-dim);font-size:14.2px}
+  .tags{display:flex;flex-wrap:wrap;gap:7px;margin:16px 0 0}
+  .tags i{
+    font-style:normal;font-size:12px;color:var(--txt-dim);
+    background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:999px;padding:4px 10px;
+  }
+  .metrics{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin:20px 0 0;
+    background:var(--line);border:1px solid var(--line);border-radius:11px;overflow:hidden;
+  }
+  .metrics div{background:rgba(0,0,0,.22);padding:11px 10px;text-align:center}
+  .metrics b{display:block;font:700 15px/1.25 var(--mono);color:var(--txt)}
+  .metrics span{display:block;margin-top:4px;font-size:11px;color:var(--txt-faint);letter-spacing:.02em}
+  .open{
+    margin-top:auto;padding-top:20px;
+  }
+  .open a{
+    display:flex;align-items:center;justify-content:center;gap:9px;
+    text-decoration:none;color:#0b0f16;background:var(--txt);
+    font-weight:700;font-size:14.5px;border-radius:11px;padding:13px 18px;
+    transition:background .16s ease,transform .16s ease;
+  }
+  .open a:hover{background:#fff;transform:translateY(-1px)}
+  .open a svg{width:15px;height:15px;flex:0 0 auto}
+  .meta{
+    margin-top:12px;font:11.5px/1.7 var(--mono);color:var(--txt-faint);
+    word-break:break-all;
+  }
+
+  /* ---------- table ---------- */
+  .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;margin-top:8px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:640px}
+  th,td{padding:12px 15px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+  th{background:rgba(255,255,255,.04);font:600 11.5px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--txt-faint)}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:rgba(255,255,255,.022)}
+  td.num{font-family:var(--mono);text-align:right}
+  td.hi{color:var(--accent);font-weight:700}
+  .note{margin-top:14px;font-size:13px;color:var(--txt-faint)}
+
+  /* ---------- footer ---------- */
+  footer{margin:80px 0 0;padding:34px 0 56px;border-top:1px solid var(--line);color:var(--txt-faint);font-size:13.5px}
+  footer a{color:var(--txt-dim)}
+  footer a:hover{color:var(--accent)}
+  footer .row{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+  @media (max-width:860px){
+    .grid{grid-template-columns:1fr}
+    .strip{grid-template-columns:repeat(2,1fr)}
+  }
+  @media (max-width:520px){
+    header{padding:52px 0 30px}
+    .metrics{grid-template-columns:repeat(3,1fr)}
+    .metrics b{font-size:13px}
+  }
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <span class="kicker">One prompt · Four models · Four 3D scenes</span>
+  <h1>鹈鹕骑自行车 <em>3D</em><br>四模型同题竞技场</h1>
+  <p class="lede">
+    同一条初始 prompt，四个大模型各自从零写出一个 Three.js 程序化 3D 页面：建模、交互、部署全包，
+    然后自己把访问链接交出来。四个页面放在同一个仓库里，点开就能看。
+  </p>
+  <div class="prompt-box">
+    <span class="lbl">初始 Prompt · 原文</span>
+    <code>生成一个鹈鹕骑自行车的 3D 页面，尽可能把你所有的能力全部都用上. 然后上传到 CDN 上, 把访问链接给我</code>
+    <code class="add">+ 忽略掉这个目录下的所有文件，自己新建个文件夹来执行，名字要把内容和模型名带上　<span style="color:var(--txt-faint)">（除 step-5-preview 外的三个都带这条）</span></code>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="strip">
+    <div><b>4</b><span>个模型 / 个页面</span></div>
+    <div><b>4.5 h</b><span>合计耗时</span></div>
+    <div><b>43.4 M</b><span>总 token（含缓存）</span></div>
+    <div><b>2.8 M</b><span>非缓存 token</span></div>
+  </div>
+
+  <div class="sec">
+    <h2>四个结果页面</h2>
+    <p>按会话开始时间排序 · 点按钮直接打开</p>
+  </div>
+
+  <div class="grid">
+
+    <!-- 1 -->
+    <article class="card">
+      <div class="card-top">
+        <span class="rank">1</span>
+        <span class="model" title="阶跃星辰 / step-5-preview">阶跃星辰 · step-5-preview</span>
+      </div>
+      <h3>鹈鹕骑行日记<span class="sub">Pelican Ride 3D</span></h3>
+      <p class="desc">戴水手帽、车筐里装鱼的鹈鹕骑复古公路车沿海岸公路前行。两段式 IK 踩踏、昼夜四档、五机位缓动运镜、SVG 速度表遥测、4 套涂装。</p>
+      <div class="tags"><i>多文件 + 672 KB 单文件版</i><i>5 机位</i><i>昼夜循环</i><i>Web Audio</i></div>
+      <div class="metrics">
+        <div><b>74.1<small style="font-size:10px"> min</small></b><span>耗时</span></div>
+        <div><b>12.82 M</b><span>总 token</span></div>
+        <div><b>248</b><span>助手轮次</span></div>
+      </div>
+      <div class="open">
+        <a href="pages/step-5-preview/">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>
+          打开页面
+        </a>
+        <div class="meta">/pages/step-5-preview/　·　净 token 906,584</div>
+      </div>
+    </article>
+
+    <!-- 2 -->
+    <article class="card">
+      <div class="card-top">
+        <span class="rank">2</span>
+        <span class="model" title="cc / gpt-6-astra">cc · gpt-6-astra</span>
+      </div>
+      <h3>Pelican Post · 骑进海风里<span class="sub">A slower pace. A happier place.</span></h3>
+      <p class="desc">中英双语的"海岛旅行杂志"风格页面：可交互 3D 微缩海岛，灯塔、帆船、海鸥、动态海面，一键导出 1800×1400 明信片 PNG。</p>
+      <div class="tags"><i>Vite 构建</i><i>中英双语</i><i>明信片导出</i><i>10+23 项测试</i></div>
+      <div class="metrics">
+        <div><b>47.5<small style="font-size:10px"> min</small></b><span>耗时</span></div>
+        <div><b>2.87 M</b><span>总 token</span></div>
+        <div><b>78</b><span>助手轮次</span></div>
+      </div>
+      <div class="open">
+        <a href="pages/gpt-6-astra/">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>
+          打开页面
+        </a>
+        <div class="meta">/pages/gpt-6-astra/　·　净 token 423,913</div>
+      </div>
+    </article>
+
+    <!-- 3 -->
+    <article class="card">
+      <div class="card-top">
+        <span class="rank">3</span>
+        <span class="model" title="workbuddy / cn:deepseek-v4.1-flash">workbuddy · cn:deepseek-v4.1-flash</span>
+      </div>
+      <h3>鹈鹕骑士 3D<span class="sub">Pelican Rider</span></h3>
+      <p class="desc">单文件 740 KB、零外部请求。84 节链条、56 根辐条的轮组、自研 HDR 后处理管线、无限滚动海岸公路、骑行物理与 GLB 导出。</p>
+      <div class="tags"><i>自包含单文件</i><i>HDR 后处理</i><i>7 机位</i><i>GLB 导出</i></div>
+      <div class="metrics">
+        <div><b>93.1<small style="font-size:10px"> min</small></b><span>耗时</span></div>
+        <div><b class="hi">22.90 M</b><span>总 token</span></div>
+        <div><b>388</b><span>助手轮次</span></div>
+      </div>
+      <div class="open">
+        <a href="pages/deepseek-v4.1-flash/">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>
+          打开页面
+        </a>
+        <div class="meta">/pages/deepseek-v4.1-flash/　·　净 token 920,301</div>
+      </div>
+    </article>
+
+    <!-- 4 -->
+    <article class="card">
+      <div class="card-top">
+        <span class="rank">4</span>
+        <span class="model" title="claude-opus-5-5">claude-opus-5-5</span>
+      </div>
+      <h3>鹈鹕骑自行车 3D<span class="sub">Pelican on a Bicycle</span></h3>
+      <p class="desc">戴头盔系围巾的鹈鹕绕池塘兜圈：腿踩踏板、翅膀握车把全用 IK。物理天空昼夜循环、萤火虫星空、5 种相机、aria-live 读屏支持。</p>
+      <div class="tags"><i>8 个 ES 模块</i><i>6 轮视觉审查</i><i>无障碍</i><i>物理天空</i></div>
+      <div class="metrics">
+        <div><b>54.8<small style="font-size:10px"> min</small></b><span>耗时</span></div>
+        <div><b>4.86 M</b><span>总 token</span></div>
+        <div><b>93</b><span>助手轮次</span></div>
+      </div>
+      <div class="open">
+        <a href="pages/claude-opus-5-5/">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>
+          打开页面
+        </a>
+        <div class="meta">/pages/claude-opus-5-5/　·　净 token 582,400　·　three.js 走 jsDelivr</div>
+      </div>
+    </article>
+
+  </div>
+
+  <div class="sec">
+    <h2>耗时与 token 对照</h2>
+    <p>逐个 assistant message 的 usage 累加 · 时间戳为 UTC</p>
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>模型</th><th>耗时</th><th>总 token（含缓存）</th><th>非缓存 token</th><th>缓存读取</th><th>助手轮次</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td><code>step-5-preview</code></td><td class="num">74.1 min</td><td class="num">12,823,384</td><td class="num">906,584</td><td class="num">11,916,800</td><td class="num">248</td></tr>
+        <tr><td>2</td><td><code>gpt-6-astra</code></td><td class="num">47.5 min</td><td class="num">2,867,749</td><td class="num hi">423,913</td><td class="num">2,443,836</td><td class="num">78</td></tr>
+        <tr><td>3</td><td><code>cn:deepseek-v4.1-flash</code></td><td class="num hi">93.1 min</td><td class="num hi">22,900,589</td><td class="num">920,301</td><td class="num">21,980,288</td><td class="num hi">388</td></tr>
+        <tr><td>4</td><td><code>claude-opus-5-5</code></td><td class="num">54.8 min</td><td class="num">4,855,306</td><td class="num">582,400</td><td class="num">4,272,906</td><td class="num">93</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">
+    耗时按首尾消息时间戳之差计算，含工具调用与等待时间。长上下文反复重发导致缓存读取占了总量的 85%–96%，
+    因此「总 token」看着很唬人；「非缓存 token」= input + output，更接近模型真正处理的新内容量。
+    <code>step-5-preview</code> 的 74.1 min 是纯建站任务耗时，之后用户又追问了 3 轮 CDN 发布原理，整段会话为 238.6 min。
+    完整拆分见 <a href="https://github.com/Robotwizardt/pelican-bicycle-3d-arena#readme" style="color:var(--accent)">README.md</a>。
+  </p>
+
+</main>
+
+<footer>
+  <div class="wrap row">
+    <span>四个模型 · 一条 prompt · 四个 3D 页面 —— 2026-09-30 生成，合并于同一仓库。</span>
+    <span>
+      <a href="https://github.com/Robotwizardt/pelican-bicycle-3d-arena">GitHub 仓库</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/Robotwizardt/pelican-bicycle-3d-arena#readme">项目介绍 / 统计明细</a>
+    </span>
+  </div>
+</footer>
+
+</body>
+</html>
