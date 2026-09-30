@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>鹈鹕骑自行车 3D · 四模型同题竞技场</title>
-<meta name="description" content="同一条初始 prompt，四个大模型各自写出的「鹈鹕骑自行车」Three.js 程序化 3D 页面，附耗时与 token 统计。">
+<title>鹈鹕骑自行车 3D · 八模型同题竞技场</title>
+<meta name="description" content="同一条初始 prompt，八个大模型各自写出的「鹈鹕骑自行车」Three.js 程序化 3D 页面，附耗时、token 与费用统计。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E%F0%9F%90%A6%3C/text%3E%3C/svg%3E">
 <style>
   :root{
@@ -81,7 +81,7 @@
     padding:24px;transition:background .18s ease,border-color .18s ease,transform .18s ease;
   }
   .card:hover{background:var(--card-hover);border-color:var(--line-strong);transform:translateY(-3px)}
-  .card-top{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+  .card-top{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
   .rank{
     flex:0 0 auto;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
     font:700 13px/1 var(--mono);color:#0b0f16;background:var(--accent);
@@ -89,6 +89,20 @@
   .card:nth-child(2) .rank{background:var(--accent-2)}
   .card:nth-child(3) .rank{background:#9d8cf5}
   .card:nth-child(4) .rank{background:#f08a8a}
+  .card:nth-child(5) .rank{background:#7fc4f5}
+  .card:nth-child(6) .rank{background:#c4a2f2}
+  .card:nth-child(7) .rank{background:#8fe08a}
+  .card:nth-child(8) .rank{background:#f0c96f}
+  .warn{
+    font:700 10.5px/1 var(--mono);letter-spacing:.05em;white-space:nowrap;
+    color:#ffd2cc;background:rgba(240,90,90,.16);border:1px solid rgba(240,90,90,.5);
+    border-radius:6px;padding:5px 7px;
+  }
+  .card.excluded{border-color:rgba(240,90,90,.42)}
+  .card.excluded .rank{background:#f06a6a}
+  .card.excluded h3,.card.excluded p.desc{opacity:.84}
+  .cost.bad{background:linear-gradient(90deg,rgba(240,90,90,.14),rgba(240,90,90,.02));border-color:rgba(240,90,90,.34)}
+  .cost.bad b{color:#ff9d94}
   .model{
     font:600 12.5px/1 var(--mono);color:var(--txt-dim);
     border:1px solid var(--line);border-radius:7px;padding:6px 9px;
@@ -144,6 +158,7 @@
   td.cost-lo{color:var(--accent-2);font-weight:700}
   td.cost-hi{color:#f08a8a;font-weight:700}
   tr.total td{background:rgba(240,169,78,.07);font-weight:700;color:var(--txt);border-top:1px solid var(--line-strong)}
+  tr.excluded td{opacity:.55}
   .note{margin-top:14px;font-size:13px;color:var(--txt-faint)}
 
   /* ---------- footer ---------- */
@@ -166,31 +181,43 @@
 <body>
 
 <header class="wrap">
-  <span class="kicker">One prompt · Four models · Four 3D scenes</span>
-  <h1>鹈鹕骑自行车 <em>3D</em><br>四模型同题竞技场</h1>
+  <span class="kicker">One prompt · Eight models · Eight 3D scenes</span>
+  <h1>鹈鹕骑自行车 <em>3D</em><br>八模型同题竞技场</h1>
   <p class="lede">
-    同一条初始 prompt，四个大模型各自从零写出一个 Three.js 程序化 3D 页面：建模、交互、部署全包，
-    然后自己把访问链接交出来。四个页面放在同一个仓库里，点开就能看。
+    同一条题目，八个大模型各自从零写出一个 Three.js 程序化 3D 页面：建模、交互、部署全包，
+    然后自己把访问链接交出来。八个页面放在同一个仓库里，点开就能看。
   </p>
   <div class="prompt-box">
-    <span class="lbl">初始 Prompt · 原文</span>
+    <span class="lbl">第一批 · 4 个模型（05:11 → 09:59 UTC）· Prompt 原文</span>
     <code>生成一个鹈鹕骑自行车的 3D 页面，尽可能把你所有的能力全部都用上. 然后上传到 CDN 上, 把访问链接给我</code>
     <code class="add">+ 忽略掉这个目录下的所有文件，自己新建个文件夹来执行，名字要把内容和模型名带上　<span style="color:var(--txt-faint)">（除 step-5-preview 外的三个都带这条）</span></code>
+  </div>
+  <div class="prompt-box">
+    <span class="lbl">第二批 · 4 个模型（12:39 → 15:56 UTC）· Prompt 原文（四个会话逐字一致）</span>
+    <code>生成一个鹈鹕骑自行车的 3D 页面，尽可能把你所有的能力全部都用上。然后上传到 CDN，把访问链接给我。
+
+新建文件夹 C:/Users/admin/pi-cwd-20260916/pelican-bicycle-3d-arena/pages/pelican-bicycle-3d-&lt;你的模型名&gt;/ 来执行，所有产出都写在这个新文件夹里，入口是它的 index.html，不需要构建步骤就能直接打开。
+
+这个题目我之前已经让别的模型做过四版，成果就在 pages/ 下的另外四个文件夹里。本次全程不要读取、列出、搜索那四个文件夹里的任何内容，也不要看我的历史会话记录和我在网上发布的那四页——完全按你自己的思路写。除此之外联网随便用，教程素材都可以查。
+
+另外：这个目录已经在一个发布到 GitHub Pages 的 git 仓库里。不要 git init，不要新建仓库或子仓库，也不要在文件夹里留 .git。发布就直接把你自己的文件夹 commit 并 push 到当前仓库（只 add 你自己的文件夹，不要改动或提交其他文件）；如果没有推送权限或推送失败，停下来告诉我，不要另建仓库。
+
+拿不准的地方按你自己的判断做。</code>
   </div>
 </header>
 
 <main class="wrap">
 
   <div class="strip">
-    <div><b>4</b><span>个模型 / 个页面</span></div>
-    <div><b>4.5 h</b><span>合计耗时</span></div>
-    <div><b>43.4 M</b><span>总 token（含缓存）</span></div>
-    <div><b>2.8 M</b><span>非缓存 token</span></div>
-    <div class="hi-cost"><b>$19.37</b><span>总花费（官方定价）</span></div>
+    <div><b>8</b><span>个模型 / 个页面</span></div>
+    <div><b>9.6 h</b><span>合计耗时</span></div>
+    <div><b>68.0 M</b><span>总 token（含缓存）</span></div>
+    <div><b>14.7 M</b><span>非缓存 token</span></div>
+    <div class="hi-cost"><b>$38.53</b><span>总花费（口径见下）</span></div>
   </div>
 
   <div class="sec">
-    <h2>四个结果页面</h2>
+    <h2>八个结果页面</h2>
     <p>按会话开始时间排序 · 点按钮直接打开</p>
   </div>
 
@@ -292,6 +319,103 @@
       </div>
     </article>
 
+    <!-- 5 -->
+    <article class="card">
+      <div class="card-top">
+        <span class="rank">5</span>
+        <span class="model" title="workbuddy / cn:hy4-preview">workbuddy · cn:hy4-preview</span>
+      </div>
+      <h3>鹈鹕骑自行车 · Pelican Rides a Bicycle<span class="sub">程序化海岛 · 昼夜循环 · 物理化骑行姿态</span></h3>
+      <p class="desc">全场景代码生成：地形、海浪、云、棕榈、羽毛质感、天空散射与 IBL 都是运行时算出来的，连车铃声也是合成的。左侧面板可实时调参——把翅膀张开、把时刻拖到黄昏，看会变成什么样。</p>
+      <div class="tags"><i>10 个 ES 模块</i><i>实时调参面板</i><i>昼夜循环</i><i>无外部素材</i></div>
+      <div class="metrics">
+        <div><b>197.2<small style="font-size:10px"> min</small></b><span>耗时</span></div>
+        <div><b class="hi">15.76 M</b><span>总 token</span></div>
+        <div><b>266</b><span>助手轮次</span></div>
+      </div>
+      <div class="cost"><b>$10.03</b><span>provider 记账 · 主会话</span></div>
+      <div class="open">
+        <a href="pages/pelican-bicycle-3d-hy4-preview/">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>
+          打开页面
+        </a>
+        <div class="meta">/pages/pelican-bicycle-3d-hy4-preview/　·　净 token 10,910,482（全场最高，缓存几乎没命中）　·　费用 $10.03</div>
+      </div>
+    </article>
+
+    <!-- 6 -->
+    <article class="card">
+      <div class="card-top">
+        <span class="rank">6</span>
+        <span class="model" title="laogou-grok / grok-4.7">laogou-grok · grok-4.7</span>
+      </div>
+      <h3>鹈鹕骑车 · grok-4.7<span class="sub">黄昏海岸沙路 · 美洲白鹈鹕</span></h3>
+      <p class="desc">黄昏海岸的沙路上，一只美洲白鹈鹕骑着绿色城市车。场景、角色、自行车、声音全部程序化，three.js r170 内置在仓库里，没有构建步骤。W/S/A/D 骑行、Shift 冲刺、空格车铃、F 振翅、V 叫一声、C 换镜头、N 入夜。</p>
+      <div class="tags"><i>本地内置 three.js</i><i>无构建步骤</i><i>Web Audio</i><i>键位齐全</i></div>
+      <div class="metrics">
+        <div><b>52.5<small style="font-size:10px"> min</small></b><span>耗时</span></div>
+        <div><b>6.26 M</b><span>总 token</span></div>
+        <div><b>78</b><span>助手轮次</span></div>
+      </div>
+      <div class="cost"><b>$4.99</b><span>provider 记账 · 主会话</span></div>
+      <div class="open">
+        <a href="pages/pelican-bicycle-3d-grok-4.7/">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>
+          打开页面
+        </a>
+        <div class="meta">/pages/pelican-bicycle-3d-grok-4.7/　·　净 token 776,197　·　费用 $4.99</div>
+      </div>
+    </article>
+
+    <!-- 7 -->
+    <article class="card">
+      <div class="card-top">
+        <span class="rank">7</span>
+        <span class="model" title="workbuddy / kimi-k3">workbuddy · kimi-k3</span>
+      </div>
+      <h3>鹈鹕快递员 · Pelican Courier 3D<span class="sub">山谷送小鱼干 · 44 KB 单文件</span></h3>
+      <p class="desc">全程序化山谷里的小游戏：收集发光小鱼干，冲上橙色坡道就能起飞，空中按住 W 扑翼滑翔。two-bone IK 踩踏板、值噪声地形、自定义天空 shader、UnrealBloom、全合成音效、2D Canvas 雷达小地图。Playwright 实机验证 0 报错。</p>
+      <div class="tags"><i>真能玩</i><i>two-bone IK</i><i>全合成音效</i><i>Playwright 验证</i></div>
+      <div class="metrics">
+        <div><b>44.6<small style="font-size:10px"> min</small></b><span>耗时</span></div>
+        <div><b>1.59 M</b><span>总 token</span></div>
+        <div><b>35</b><span>助手轮次</span></div>
+      </div>
+      <div class="cost"><b>$1.16</b><span>provider 记账 · 主会话</span></div>
+      <div class="open">
+        <a href="pages/pelican-bicycle-3d-kimi-k3/">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>
+          打开页面
+        </a>
+        <div class="meta">/pages/pelican-bicycle-3d-kimi-k3/　·　净 token 102,727（全场最低）　·　费用 $1.16　·　three.js r160 走 jsDelivr</div>
+      </div>
+    </article>
+
+    <!-- 8 -->
+    <article class="card excluded">
+      <div class="card-top">
+        <span class="rank">8</span>
+        <span class="model" title="cc / gpt-5.6-sol">cc · gpt-5.6-sol</span>
+        <span class="warn">⚠️ 已降智 · 不计入对比</span>
+      </div>
+      <h3>Pelican Velocity — 潮汐骑行竞技场<span class="sub">暮色海岸竞速 · 圈速计时</span></h3>
+      <p class="desc">暮色海岸冲刺压弯：FLIGHT DECK 骑行控制台（圈速／里程／连击／巡航速度／太阳高度）、4 机位（追逐／环绕／电影／车载）、SPACE 腾跃、BOOST 加速、霓虹灯与速度线。这一轮模型被降智，页面虽然出得来，水平不作数，只作留档。</p>
+      <div class="tags"><i>骑行控制台</i><i>4 机位</i><i>圈速计时</i><i>1.7 MB 资源</i></div>
+      <div class="metrics">
+        <div><b>12.3<small style="font-size:10px"> min</small></b><span>耗时</span></div>
+        <div><b>0.96 M</b><span>总 token</span></div>
+        <div><b>30</b><span>助手轮次</span></div>
+      </div>
+      <div class="cost bad"><b>$2.98</b><span>⚠️ 降智，不计入对比</span></div>
+      <div class="open">
+        <a href="pages/pelican-bicycle-3d-gpt-5.6-sol/">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>
+          打开页面
+        </a>
+        <div class="meta">/pages/pelican-bicycle-3d-gpt-5.6-sol/　·　净 token 64,123　·　⚠️ 本轮被降智，结果不作数</div>
+      </div>
+    </article>
+
   </div>
 
   <div class="sec">
@@ -311,15 +435,33 @@
         <tr><td>2</td><td><code>gpt-6-astra</code></td><td class="num">47.5 min</td><td class="num">2,867,749</td><td class="num hi">423,913</td><td class="num">2,443,836</td><td class="num">78</td><td class="num">$8.77</td><td class="num cost-hi">$12.68</td></tr>
         <tr><td>3</td><td><code>cn:deepseek-v4.1-flash</code></td><td class="num hi">93.1 min</td><td class="num hi">22,900,589</td><td class="num">920,301</td><td class="num">21,980,288</td><td class="num hi">388</td><td class="num cost-lo">$0.44</td><td class="num cost-lo">$0.44</td></tr>
         <tr><td>4</td><td><code>claude-opus-5-5</code></td><td class="num">54.8 min</td><td class="num">4,855,306</td><td class="num">582,400</td><td class="num">4,272,906</td><td class="num">93</td><td class="num">$4.22</td><td class="num">$4.36</td></tr>
-        <tr class="total"><td colspan="7">合计</td><td class="num">$15.32</td><td class="num">$19.37</td></tr>
+        <tr><td>5</td><td><code>cn:hy4-preview</code></td><td class="num hi">197.2 min</td><td class="num">15,762,706</td><td class="num hi">10,910,482</td><td class="num">4,852,224</td><td class="num">266</td><td class="num cost-hi">$10.03</td><td class="num cost-hi">$10.03</td></tr>
+        <tr><td>6</td><td><code>grok-4.7</code></td><td class="num">52.5 min</td><td class="num">6,257,157</td><td class="num">776,197</td><td class="num">5,480,960</td><td class="num">78</td><td class="num">$4.99</td><td class="num">$4.99</td></tr>
+        <tr><td>7</td><td><code>kimi-k3</code></td><td class="num">44.6 min</td><td class="num">1,593,545</td><td class="num cost-lo">102,727</td><td class="num">1,490,818</td><td class="num cost-lo">35</td><td class="num cost-lo">$1.16</td><td class="num cost-lo">$1.16</td></tr>
+        <tr class="excluded"><td>8</td><td><code>gpt-5.6-sol</code> <span class="warn">降智</span></td><td class="num">12.3 min</td><td class="num">957,424</td><td class="num">64,123</td><td class="num">893,301</td><td class="num">30</td><td class="num">$2.98</td><td class="num">$2.98</td></tr>
+        <tr class="total"><td colspan="7">合计</td><td class="num">$34.48</td><td class="num">$38.53</td></tr>
       </tbody>
     </table>
   </div>
   <p class="note">
-    耗时按首尾消息时间戳之差计算，含工具调用与等待时间（四者合计 269.5 min ≈ 4.5 h）。
+    耗时按首尾消息时间戳之差计算，含工具调用与等待时间（八个会话各段相加 576.1 min ≈ 9.6 h，其中第一批四个 269.5 min）。
     长上下文反复重发导致缓存读取占了总量的 85%–96%，
     因此「总 token」看着很唬人；「非缓存 token」= input + output，更接近模型真正处理的新内容量。
     <code>step-5-preview</code> 的 74.1 min 是纯建站任务耗时，之后用户又追问了 3 轮 CDN 发布原理，整段会话为 238.6 min。
+  </p>
+  <p class="note">
+    <b style="color:var(--txt-dim)">第二批（5–8）口径：</b>
+    这四个是同日 12:39 → 15:56 UTC 另跑的一轮，prompt 多了三条约束：写死落点路径（<code>pages/</code> 里）、不许读前面四个的成果、发布直接推到本仓库。
+    它们的费用<b>不取自官方价目表</b>，而是直接汇总各 provider 在 transcript 里记账的 <code>cost</code>
+    —— <code>cn:hy4-preview</code> 走本地代理、<code>grok-4.7</code> 走 <code>api.laogou.org</code> 中转，
+    与第一批（统一按官方单价重算）口径不同，<b>两批之间不要横向比价</b>，只跟同批比。
+    <code>hy4-preview</code> 净 token 高达 1091 万，是因为它的网关几乎没命中缓存（input 1047 万才配对 485 万缓存读），这也直接把它的费用顶到 $10.03。
+    四个新会话里 <code>cc/gpt-6-sol</code> 另有 10 + 7 次 0 token 的空调用（编排用，无计费），已并入轮次外不计。
+  </p>
+  <p class="note">
+    <b style="color:var(--txt-dim)">一条作废记录：</b>
+    <code>gpt-5.6-sol</code>（#8）那一轮模型被降智，12.3 分钟就交活，页面能打开但水平不作数，<b>不计入对比</b>，只留档给以后看。
+    另有一个 <code>pelican-bicycle-3d-claude-fable-5-1</code> 因 API 接口不稳定全程失败，文件夹里只剩 3 个半成品 JS、连 index.html 都没有，已删除未收录。
   </p>
   <p class="note">
     <b style="color:var(--txt-dim)">费用口径：</b>按各模型<b>官方价目表单价</b>（StepFun $1 / $2.70 / $0.05，OpenAI $10 / $50 / $1，
@@ -344,7 +486,7 @@
 
 <footer>
   <div class="wrap row">
-    <span>四个模型 · 一条 prompt · 四个 3D 页面 —— 2026-09-30 生成，合并于同一仓库。</span>
+    <span>八个模型 · 一条 prompt · 八个 3D 页面 —— 2026-09-30 生成，合并于同一仓库。</span>
     <span>
       <a href="https://github.com/Robotwizardt/pelican-bicycle-3d-arena">GitHub 仓库</a>
       &nbsp;·&nbsp;

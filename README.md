@@ -1,13 +1,16 @@
-# 🐦 鹈鹕骑自行车 3D · 四模型同题竞技场
+# 🐦 鹈鹕骑自行车 3D · 八模型同题竞技场
 
-同一条初始 prompt，四个大模型各自从零写出一个「鹈鹕骑自行车」的 Three.js 程序化 3D 页面，
-自行完成建模、交互、部署，然后自己把访问链接交出来。
+同一条题目，八个大模型各自从零写出一个「鹈鹕骑自行车」的 Three.js 程序化 3D 页面，
+自行完成建模、交互、部署，然后自己把访问链接交出来。八个页面放在同一个仓库里。
 
-四个原本分散的仓库/托管点合并到这一个仓库，成为四个可直接打开的页面。
-原来那三个 GitHub 仓库（`pelican-ride-3d`、`pelican-bicycle-3d-deepseek-v4.1-flash`、
-`pelican-bicycle-3d-claude-opus-5-5`）以及 dataecho 上的临时站点均已废弃，本仓库是唯一留存。
+分两批跑，两批的 prompt 不一样（见 §二）：
 
-- **落地页（四页入口）**：https://robotwizardt.github.io/pelican-bicycle-3d-arena/
+- **第一批 4 个**（2026-09-30 05:11 → 09:59 UTC）：原本分散在三个 GitHub 仓库和一个 dataecho
+  临时站点上，已合并进本仓库（原仓库 `pelican-ride-3d`、`pelican-bicycle-3d-deepseek-v4.1-flash`、
+  `pelican-bicycle-3d-claude-opus-5-5` 与那个临时站点均已废弃）。
+- **第二批 4 个**（同日 12:39 → 15:56 UTC）：带着新 prompt 跑的，产出直接提交到本仓库。
+
+- **落地页（八页入口）**：https://robotwizardt.github.io/pelican-bicycle-3d-arena/
 - 仓库：https://github.com/Robotwizardt/pelican-bicycle-3d-arena
 
 ---
@@ -20,8 +23,13 @@
 | 2 | `gpt-6-astra` | https://robotwizardt.github.io/pelican-bicycle-3d-arena/pages/gpt-6-astra/ | Pelican Post · 骑进海风里 |
 | 3 | `cn:deepseek-v4.1-flash` | https://robotwizardt.github.io/pelican-bicycle-3d-arena/pages/deepseek-v4.1-flash/ | 鹈鹕骑士 3D · Pelican Rider |
 | 4 | `claude-opus-5-5` | https://robotwizardt.github.io/pelican-bicycle-3d-arena/pages/claude-opus-5-5/ | 鹈鹕骑自行车 · Pelican on a Bicycle 3D |
+| 5 | `cn:hy4-preview` | https://robotwizardt.github.io/pelican-bicycle-3d-arena/pages/pelican-bicycle-3d-hy4-preview/ | 鹈鹕骑自行车 · Pelican Rides a Bicycle |
+| 6 | `grok-4.7` | https://robotwizardt.github.io/pelican-bicycle-3d-arena/pages/pelican-bicycle-3d-grok-4.7/ | 鹈鹕骑车 · grok-4.7 |
+| 7 | `kimi-k3` | https://robotwizardt.github.io/pelican-bicycle-3d-arena/pages/pelican-bicycle-3d-kimi-k3/ | 鹈鹕快递员 · Pelican Courier 3D |
+| 8 | `gpt-5.6-sol` ⚠️ | https://robotwizardt.github.io/pelican-bicycle-3d-arena/pages/pelican-bicycle-3d-gpt-5.6-sol/ | Pelican Velocity — 潮汐骑行竞技场 |
 
-> 顺序 = 会话开始时间（UTC 2026-09-30 05:11 → 09:59）。
+> 顺序 = 会话开始时间（第一批 UTC 2026-09-30 05:11 → 09:59，第二批 12:39 → 13:14）。
+> ⚠️ #8 `gpt-5.6-sol` 那一轮**模型被降智**，页面能打开但水平不作数，**不计入对比**，仅作留档。
 > jsDelivr 镜像：`https://cdn.jsdelivr.net/gh/Robotwizardt/pelican-bicycle-3d-arena@main/pages/<slug>/index.html`
 > —— 注意 jsDelivr 对 `.html` 一律返回 `text/plain`（防滥用），只能当**下载**用，不能"打开即玩"。
 
@@ -46,6 +54,36 @@
 
 ---
 
+**#5 / #6 / #7 / #8（`cn:hy4-preview`、`grok-4.7`、`kimi-k3`、`gpt-5.6-sol`）** —— 同日 12:39 UTC 跑的
+第二批，四个会话收到的 prompt **逐字完全一致**（已用 md5 对过四份 transcript 的首条 user 消息）：
+
+```
+生成一个鹈鹕骑自行车的 3D 页面，尽可能把你所有的能力全部都用上。然后上传到 CDN，把访问链接给我。
+
+新建文件夹 C:/Users/admin/pi-cwd-20260916/pelican-bicycle-3d-arena/pages/pelican-bicycle-3d-<你的模型名>/ 来执行，所有产出都写在这个新文件夹里，入口是它的 index.html，不需要构建步骤就能直接打开。
+
+这个题目我之前已经让别的模型做过四版，成果就在 pages/ 下的另外四个文件夹里。本次全程不要读取、列出、搜索那四个文件夹里的任何内容，也不要看我的历史会话记录和我在网上发布的那四页——完全按你自己的思路写。除此之外联网随便用，教程素材都可以查。
+
+另外：这个目录已经在一个发布到 GitHub Pages 的 git 仓库里。不要 git init，不要新建仓库或子仓库，也不要在文件夹里留 .git。发布就直接把你自己的文件夹 commit 并 push 到当前仓库（只 add 你自己的文件夹，不要改动或提交其他文件）；如果没有推送权限或推送失败，停下来告诉我，不要另建仓库。
+
+拿不准的地方按你自己的判断做。
+```
+
+比第一批多了四条约束，都是冲着“合并进一个仓库后”这个新处境加的：
+
+| 约束 | 为什么加 |
+|---|---|
+| 写死落点路径 `pages/pelican-bicycle-3d-<模型名>/` | 4 个原目录已收进竞技场的 `pages/` 下，不写死就会建到别处等人工搬 |
+| 不许读那四个文件夹 / 历史会话 / 已发布页面 | 第一批是背靠背跑的、天然互为盲盒；第二批跟第一批同机同日，不堵就会看到别人的代码 |
+| 不要 `git init`、不要建仓库，直接推当前仓库 | 第一批里三个是自建 GitHub 仓库发布的（另一个用 dataecho 临时站）；现在已有 Pages 仓库，再建会多出一堆仓库，而且嵌套 `.git` 会让外层 `git add` 只登记一个 gitlink、页面文件进不了仓库 |
+| 只 add 自己的文件夹 | 防止它顺手改了落地页/README，或把无关文件一起提交 |
+
+> 代价说明：这条 prompt 把“发布到 CDN”具体化成了“推当前仓库”，而第一批里
+> `gpt-6-astra` 是用临时托管站发布、`step-5-preview` 是用自建仓库发布的 ——
+> 两批的发布路径不完全可比，看结果时以页面本身为准。
+
+---
+
 ## 三、耗时、token 与费用
 
 统计来源：pi-web 本地会话库 `~/.pi/agent/sessions/--C--Users-admin-pi-cwd-20260916--/`，
@@ -57,14 +95,21 @@
 | `gpt-6-astra` | `01a0f1bc-7351-755a-a8bf-2c9346050731` | **47.5 min** | 2,867,749 | 423,913 | 2,443,836 | 78 |
 | `cn:deepseek-v4.1-flash` | `01a0f1be-a4d7-755a-a8bf-2c95daae3609` | **93.1 min** | 22,900,589 | 920,301 | 21,980,288 | 388 |
 | `claude-opus-5-5` | `01a0f1c1-3a7b-755a-a8bf-2c9988c01b4d` | **54.8 min** | 4,855,306 | 582,400 | 4,272,906 | 93 |
+| `cn:hy4-preview` | `01a0f253-7eb5-7413-8032-34241212a06c` | **197.2 min** | 15,762,706 | 10,910,482 | 4,852,224 | 266 |
+| `grok-4.7` | `01a0f253-e618-7413-8032-342646eda5b6` | **52.5 min** | 6,257,157 | 776,197 | 5,480,960 | 78 |
+| `kimi-k3` | `01a0f254-1db0-7413-8032-34284369e49f` | **44.6 min** | 1,593,545 | 102,727 | 1,490,818 | 35 |
+| `gpt-5.6-sol` ⚠️ | `01a0f273-b1a7-7413-8032-342d8c4c9a52` | **12.3 min** | 957,424 | 64,123 | 893,301 | 30 |
 
 ※ `step-5-preview` 的 74.1 分钟是**纯建站任务**耗时（05:11:56 → 06:26:03 UTC，
 结束时已给出可用链接）。之后用户又追问了 3 轮「CDN 到底是怎么发布的」，会话拖到
 09:10:31 UTC 才结束，含追问的整段为 238.6 min、总 token 12,823,384。
 表中其余数字均为含追问的整段会话值；若只看建站任务，该会话为 12,110,890 / 637,738。
 
-四个会话耗时合计 **269.5 min ≈ 4.5 h**（各会话各自独立计时，四者有重叠，不是墙上时间跨度；
-从最早开始到最晚结束为 05:11:56 → 11:29:44 UTC，跨度 6.3 h）。
+八个会话耗时各段相加 **576.1 min ≈ 9.6 h**（第一批四个 269.5 min + 第二批四个 306.6 min）。
+各会话各自独立计时，批内有重叠，不是墙上时间跳度：
+第一批为 05:11:56 → 11:29:44 UTC（跨度 6.3 h），第二批为 12:39:13 → 15:56:23 UTC（跨度 3.3 h）。
+
+⚠️ 第 8 行 `gpt-5.6-sol` 那一轮模型被降智（见 §四 · 8），数字只作留档，不计入任何对比。
 
 ### 明细拆分
 
@@ -74,10 +119,14 @@
 | `gpt-6-astra` | 371,769 | 52,144 | 18,416 | 2,443,836 |
 | `cn:deepseek-v4.1-flash` | 453,709 | 466,592 | 263,136 | 21,980,288 |
 | `claude-opus-5-5` | 517,845 | 64,555 | 0 | 4,272,906 |
+| `cn:hy4-preview` | 10,476,560 | 433,922 | 282,232 | 4,852,224 |
+| `grok-4.7` | 601,391 | 174,806 | 126,106 | 5,480,960 |
+| `kimi-k3` | 69,003 | 33,724 | 13,006 | 1,490,818 |
+| `gpt-5.6-sol` ⚠️ | 35,179 | 28,944 | 3,455 | 893,301 |
 
-### 费用总表（官方 API 定价）
+### 费用总表（官方 API 定价 · 仅第一批 1–4）
 
-按各模型**官方价目表**的单价 × 上表实际 usage 计算，单位 USD。
+按各模型**官方价目表**的单价 × 上表实际 usage 计算，单位 USD。第二批的费用口径不同，单列在下。
 
 | 模型 | input | output | cacheRead | 主会话费用 | 子代理 | 合计 |
 |---|---|---|---|---|---|---|
@@ -88,6 +137,25 @@
 | **合计** | | | | **$15.32** | **$4.05** | **$19.37** |
 
 单价单位：美元 / 百万 tokens。※ DeepSeek 官方以人民币计价且分峰谷两档，详见下节拆解。
+
+### 费用（第二批 5–8 · provider 记账）
+
+第二批这四家的费用**没有按官方价目表重算**，而是直接汇总各 provider 在 transcript 里
+记录的 `usage.cost.total` —— 它们分别跑在本地代理（workbuddy）和中转站（`api.laogou.org`、`cc`）上，
+官方单价未必等于实际计费口径，硬套反而失真。这也意味着**两批不能横向比价**。
+
+| 模型 | input | output | cacheRead | 费用 | 每轮成本 | 每百万 token |
+|---|---|---|---|---|---|---|
+| `cn:hy4-preview` | 10,476,560 | 433,922 | 4,852,224 | **$10.0265** | $0.0377 | $0.636 |
+| `grok-4.7` | 601,391 | 174,806 | 5,480,960 | **$4.9921** | $0.0640 | $0.798 |
+| `kimi-k3` | 69,003 | 33,724 | 1,490,818 | **$1.1601** | $0.0332 | $0.728 |
+| `gpt-5.6-sol` ⚠️ | 35,179 | 28,944 | 893,301 | **$2.9817** | $0.0994 | $3.114 |
+| **合计** | 11,182,133 | 671,396 | 12,717,303 | **$19.16** | | |
+
+- ⚠️ `gpt-5.6-sol` 那一轮被降智，这一行只作留档，不要拿去比。
+- 四个新会话里另有 17 次 `cc/gpt-6-sol` 的调用（`kimi-k3` 会话 10 次、`gpt-5.6-sol` 会话 7 次）
+  `usage` 全为 0 —— 那是编排用的空跑，不产生费用，也未计入轮次。
+- **全场合计：主会话 $34.48，含子代理 $38.53**（第二批无子代理）。
 
 #### 按 token 类型的费用拆解
 
@@ -128,13 +196,17 @@ token 不并入主会话，但钱确实花了：
 ### 口径说明
 
 - **总 token（含缓存读）** = `usage.totalTokens` 累加，即 input + output + cacheRead。
-  四个会话都是长上下文反复重发，缓存读占了 85%–96%，所以这个数看着很唬人。
+  第一批四个会话都是长上下文反复重发，缓存读占了 85%–96%，所以这个数看着很唬人；
+  第二批的 `cn:hy4-preview` 是个反例 —— 它的网关几乎没命中缓存（缓存读只占 31%，
+  input 高达 1047 万），于是净 token 冲到 1091 万，为全场最高，费用也跟着顶到 $10.03。
 - **非缓存 token** = input + output，不含 `cacheRead`，更接近"模型真正处理了多少新内容"。
 - 两者都写，是因为单看任何一个都会误导：只看总量会以为 deepseek 烧了 2290 万，
   但其中 2198 万是它自己反复重发的缓存；只看净量又会忽略单价差异
   （`gpt-6-astra` 净量最低仅 42 万，却是最贵的一档，$3.06/百万 token）。
-- 四个会话均在同一台机器、同一时期跑（2026-09-30），可横向比较。
-- 时间戳为 UTC，北京时间 = 表中 +8h（例：`gpt-6-astra` 本地 17:54 → 18:41）。
+- 八个会话均在同一台机器、同一天跑（2026-09-30），第一批内部、第二批内部可横向比较；
+  但两批的费用口径不同（官方定价 vs provider 记账），**跨越两批比单价没有意义**。
+- 时间戳为 UTC，北京时间 = 表中 +8h（第一批：`gpt-6-astra` 本地 17:54 → 18:41；
+  第二批：`cn:hy4-preview` 本地 20:39 → 23:56）。
 
 **费用口径：**
 
@@ -164,7 +236,7 @@ token 不并入主会话，但钱确实花了：
 
 ---
 
-## 四、四个页面分别是什么
+## 四、八个页面分别是什么
 
 ### 1. `step-5-preview` — 鹈鹕骑行日记 · Pelican Ride 3D
 
@@ -221,13 +293,62 @@ HDR 半浮点 RT + 自研后处理（ACES/泛光/色散/晕影/颗粒/速度径�
 - **注意**：本页的 three.js 与 lil-gui 通过 jsDelivr CDN 的 importmap 加载，不是自包含的
 - 生成过程用子代理做了 6 轮视觉审查；已知小瑕疵：头盔边缘下方能看到一小块头部、黄昏时天空顶部偏冷
 
+### 5. `cn:hy4-preview` — 鹈鹕骑自行车 · Pelican Rides a Bicycle
+
+`pages/pelican-bicycle-3d-hy4-preview/`　耗时 197.2 min　15,762,706 token / 266 轮　费用 **$10.03**（provider 记账，无子代理）
+
+夜岛 + 昼夜循环 + 物理化骑行姿态。全场景运行时生成：地形、海浪、云、棕榈、羽毛质感、
+天空散射与 IBL 都是算出来的，连车铃声也是代码合成的，无任何外部素材。
+界面有暂停/昼夜/静音/车铃/叫一声/截图/隐藏界面/帮助，左侧面板可实时调参
+（把翅膀张开、把时刻拖到黄昏），右侧状态面板显示骑手/翅膀/世界/渲染/色调映射/帧率/车速/里程/时刻/镜头/开销。
+
+- 页面：`index.html`（526 行）+ `src/`（`audio` `bicycle` `effects` `main` `materials` `pelican` `postfx` `sky` `util` `world`）
+- three.js 本地内置（`three.min.js`），无构建步骤，改文件即生效
+- 本轮耗时最长（197.2 min）、净 token 最高（1091 万），且缓存几乎没命中
+
+### 6. `grok-4.7` — 鹈鹕骑车 · grok-4.7
+
+`pages/pelican-bicycle-3d-grok-4.7/`　耗时 52.5 min　6,257,157 token / 78 轮　费用 **$4.99**（provider 记账）
+
+黄昏海岸的沙路上，一只美洲白鹈鹕骑着绿色城市车。场景、角色、车、声音全部程序化，
+没有建模软件导出，也没有构建步骤。键位是八版里最全的：W/↑ 蹬、S/↓ 刹、A D 转向、Shift 冲刺、
+空格车铃、F 振翅、V 叫一声、C 换镜头、N 入夜、R 回沙路、O 隐藏界面。
+
+- 页面：`index.html` + `css/style.css` + `js/`（`audio` `bicycle` `main` `meshutil` `pelican` `world`）
+- three.js r170（MIT）放在 `vendor/three.module.min.js`；因为是模块脚本，需网页服务器提供，`file://` 双击不行
+
+### 7. `kimi-k3` — 鹈鹕快递员 · Pelican Courier 3D
+
+`pages/pelican-bicycle-3d-kimi-k3/`　耗时 44.6 min　1,593,545 token / 35 轮　费用 **$1.16**（provider 记账）
+
+唯一一版**有玩法**的：全程序化山谷里送小鱼干 —— 收集发光的小鱼干（小地图上青点），每 10 条触发庆祝；
+橙色坡道冲上去就能起飞，空中按住 W 扑翼滑翔；昼夜切换后车头灯自动点亮，还能下雨。
+Two-bone IK 实时吸附旋转脚踏；自研骑行物理（坡度加减速/滚动阻力/转向倾斜/坡道起跳/空中滑翔）；
+值噪声地形与顶点着色、自定义天空渐变 shader、UnrealBloom 后处理、PCFSoft 阴影；
+WebAudio 全合成音效（风声随速度滤波、踏板咔哒、拾取琶音、落地闷响）、2D Canvas 雷达小地图。
+
+- 页面：`index.html` **单文件 44 KB**（+ `README.md`），全场体积最小、token 最省（净 10.3 万，全场最低）
+- Three.js **r160 走 jsdelivr ESM**（importmap），需联网；已用 Playwright (Edge) 实机验证，控制台 0 报错
+
+### 8. `gpt-5.6-sol` — Pelican Velocity — 潮汐骑行竞技场
+
+`pages/pelican-bicycle-3d-gpt-5.6-sol/`　耗时 12.3 min　957,424 token / 30 轮　费用 **$2.98**（provider 记账）
+
+暮色海岸竞速，有 FLIGHT DECK 骑行控制台（速度/圈速/里程/连击/巡航速度/太阳高度六项遥测）、
+4 机位（追逐/环绕/电影/车载）、SPACE 腾跃、BOOST 加速、霓虹灯与速度线。
+
+> ⚠️ **这一轮模型被降智**。12.3 分钟就交活，页面能打开，但水平不作数，
+> **不计入对比**，仅作留档（对外引用请注明降智）。
+
+- 页面：`index.html` + `app.js` + `styles.css` + `vendor/three.min.js` + `favicon.svg` + `preview-desktop.png`
+
 ---
 
 ## 五、目录结构
 
 ```
 pelican-bicycle-3d-arena/
-├── index.html                        落地页：四张卡片 + 四页入口
+├── index.html                        落地页：八张卡片 + 八页入口
 ├── README.md                         本文件：prompt / 耗时 / token / 结果页面
 ├── .nojekyll                         关掉 GitHub Pages 的 Jekyll 处理
 └── pages/
@@ -248,9 +369,25 @@ pelican-bicycle-3d-arena/
     │   ├── src/  build.mjs  serve.mjs
     │   ├── package.json  package-lock.json
     │   └── README.md
-    └── claude-opus-5-5/              （原仓库 pelican-bicycle-3d-claude-opus-5-5）
-        ├── index.html
-        └── js/                       8 个 ES 模块（源码即产物）
+    ├── claude-opus-5-5/              （原仓库 pelican-bicycle-3d-claude-opus-5-5）
+    │   ├── index.html
+    │   └── js/                       8 个 ES 模块（源码即产物）
+    ├── pelican-bicycle-3d-hy4-preview/       （第二批）
+    │   ├── index.html                526 行
+    │   ├── src/                      10 个 ES 模块
+    │   └── three.min.js              本地内置 three.js
+    ├── pelican-bicycle-3d-grok-4.7/          （第二批）
+    │   ├── index.html  css/style.css
+    │   ├── js/                       audio / bicycle / main / meshutil / pelican / world
+    │   ├── vendor/three.module.min.js 本地内置 three.js r170
+    │   └── README.md
+    ├── pelican-bicycle-3d-kimi-k3/           （第二批）
+    │   ├── index.html                44 KB 单文件（three.js 走 jsDelivr）
+    │   └── README.md
+    └── pelican-bicycle-3d-gpt-5.6-sol/       （第二批，⚠️ 降智，不计入对比）
+        ├── index.html  app.js  styles.css  favicon.svg
+        ├── vendor/three.min.js      本地内置 three.js
+        └── preview-desktop.png
 ```
 
 ---
@@ -290,12 +427,18 @@ python -m http.server 8080
 4. **`dist/` 目录被"展平"**：`gpt-6-astra/dist/*` 直接提到 `pages/gpt-6-astra/` 下，
    保证 URL 是 `/pages/gpt-6-astra/` 而不是 `/pages/gpt-6-astra/dist/`。
 5. 三个原仓库保持不动，由仓库主自行删除；本地四个原始目录也未被修改。
+6. **第二批 4 个是直接提交进本仓库的**（prompt 里就要求 push 到当前仓库），不是合并进来的，
+   所以它们的 git 历史就是仓库自己的历史。同批还有一个 `pelican-bicycle-3d-claude-fable-5-1`，
+   因 API 接口不稳定全程失败，只落下 `js/geometry.js`、`js/gl.js`、`js/math.js` 三个半成品，
+   连 `index.html` 都没有，已删除，未收录。
 
 ---
 
 ## 八、已知问题
 
-- `claude-opus-5-5` 页面依赖 jsDelivr 上的 three.js 0.170.0 与 lil-gui，断网/被墙时打不开（另外三页不依赖外部 CDN）。
+- `claude-opus-5-5` 与 `kimi-k3` 的 three.js 走 jsDelivr（0.170.0 / r160），断网或被墙时打不开；其余六页的 three.js 都在仓库里。
 - `step-5-preview` 与 `gpt-6-astra` 的页面在低端移动设备上会掉帧（shadow map + 后处理较重）。
 - `deepseek-v4.1-flash` 单文件 740 KB，首次加载需要下载完整体积（gzip 后约 200 KB）。
+- `gpt-5.6-sol` 那一版是降智产物，不要当基准引用；它的 `preview-desktop.png` 是它自己截的预览图。
+- `cn:hy4-preview` 的网关缓存命中率很低，想重跑一遍的费用会很可观。
 - jsDelivr 镜像的 `.html` 是 `text/plain`，只适合下载，不适合直接当页面入口。
