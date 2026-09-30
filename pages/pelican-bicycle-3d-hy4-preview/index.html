@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <title>鹈鹕骑自行车 · Pelican Rides a Bicycle</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <meta name="description"
+    content="一只鹈鹕骑着自行车环岛骑行 —— 纯前端 3D 场景，程序化生成的海岛、天空、海浪与羽毛，含昼夜循环、物理化骑行姿态与电影级后处理。" />
+  <meta name="theme-color" content="#0b1020" />
+  <meta property="og:title" content="鹈鹕骑自行车 · Pelican Rides a Bicycle" />
+  <meta property="og:description" content="纯前端 3D：程序化海岛 + 物理化骑行姿态 + 昼夜循环 + 电影级后处理。" />
+  <meta property="og:type" content="website" />
+  <style>
+    :root {
+      --fg: #eaf0f8;
+      --fg-dim: #9fb0c6;
+      --bg: #070a12;
+      --panel: rgba(10, 16, 28, 0.72);
+      --panel-b: rgba(150, 190, 240, 0.16);
+      --accent: #66d9ff;
+      --accent2: #ffd479;
+      --shadow: 0 10px 34px rgba(0, 0, 0, .55);
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: ui-sans-serif, system-ui, "Segoe UI", "PingFang SC", "Microsoft YaHei", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #stage {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    #gl {
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+      cursor: grab;
+    }
+
+    #gl:active {
+      cursor: grabbing
+    }
+
+    /* -------------------- UI -------------------- */
+    #ui {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    #ui>* {
+      pointer-events: auto
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--panel-b);
+      border-radius: 14px;
+      backdrop-filter: blur(14px) saturate(1.2);
+      -webkit-backdrop-filter: blur(14px) saturate(1.2);
+      box-shadow: var(--shadow);
+    }
+
+    button,
+    .btn {
+      font: inherit;
+      font-size: 12px;
+      color: var(--fg);
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-radius: 9px;
+      padding: 6px 11px;
+      cursor: pointer;
+      transition: background .15s, border-color .15s, transform .08s;
+      white-space: nowrap;
+    }
+
+    button:hover {
+      background: rgba(255, 255, 255, .13);
+      border-color: rgba(255, 255, 255, .24)
+    }
+
+    button:active {
+      transform: translateY(1px)
+    }
+
+    button.on {
+      background: linear-gradient(180deg, rgba(102, 217, 255, .30), rgba(102, 217, 255, .14));
+      border-color: rgba(102, 217, 255, .60);
+      color: #dff6ff;
+    }
+
+    /* 顶部条 */
+    #topBar {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    #titleCard {
+      padding: 9px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    #titleCard b {
+      font-size: 14px;
+      letter-spacing: .3px;
+    }
+
+    #titleCard span {
+      font-size: 11px;
+      color: var(--fg-dim)
+    }
+
+    #topBtns {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      padding: 6px;
+      margin-left: auto;
+    }
+
+    /* 相机条 */
+    #camBar {
+      position: absolute;
+      left: 12px;
+      bottom: 84px;
+      display: flex;
+      gap: 6px;
+      padding: 6px;
+      flex-wrap: wrap;
+      max-width: calc(100vw - 24px);
+    }
+
+    /* HUD */
+    #hud {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      padding: 10px 13px;
+      font-variant-numeric: tabular-nums;
+      font-size: 11.5px;
+      line-height: 1.75;
+      min-width: 176px;
+    }
+
+    #hud .hrow {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    #hud .hk {
+      color: var(--fg-dim)
+    }
+
+    #hud .hv {
+      color: var(--accent);
+      font-weight: 600
+    }
+
+    /* 参数面板 */
+    #sliders {
+      position: absolute;
+      left: 12px;
+      top: 74px;
+      width: 258px;
+      max-height: calc(100vh - 190px);
+      overflow-y: auto;
+      padding: 10px 12px;
+      scrollbar-width: thin;
+    }
+
+    #sliders::-webkit-scrollbar {
+      width: 6px
+    }
+
+    #sliders::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, .18);
+      border-radius: 3px
+    }
+
+    #sliders h4 {
+      margin: 8px 0 6px;
+      font-size: 11px;
+      color: var(--accent2);
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .srow {
+      display: grid;
+      grid-template-columns: 74px 1fr 40px;
+      align-items: center;
+      gap: 7px;
+      margin: 3px 0;
+      font-size: 11px;
+    }
+
+    .slab {
+      color: var(--fg-dim)
+    }
+
+    .sval {
+      text-align: right;
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 3px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, .18);
+      outline: none;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid #0b1020;
+      cursor: pointer;
+    }
+
+    input[type=range]::-moz-range-thumb {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid #0b1020;
+      cursor: pointer;
+    }
+
+    select {
+      font: inherit;
+      font-size: 11px;
+      color: var(--fg);
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-radius: 7px;
+      padding: 3px 6px;
+      outline: none;
+    }
+
+    /* 帮助 */
+    #help {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px 26px;
+      max-width: 460px;
+      font-size: 12.5px;
+      line-height: 1.85;
+    }
+
+    #help h3 {
+      margin: 0 0 10px;
+      font-size: 15px
+    }
+
+    #help kbd {
+      display: inline-block;
+      min-width: 20px;
+      text-align: center;
+      padding: 1px 6px;
+      margin: 0 1px;
+      font: inherit;
+      font-size: 11px;
+      background: rgba(255, 255, 255, .10);
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-bottom-width: 2px;
+      border-radius: 5px;
+    }
+
+    #help .close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    /* toast */
+    #toast {
+      position: absolute;
+      left: 50%;
+      bottom: 40px;
+      transform: translateX(-50%) translateY(14px);
+      padding: 8px 18px;
+      font-size: 12.5px;
+      opacity: 0;
+      transition: opacity .22s, transform .22s;
+      border-radius: 999px;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0)
+    }
+
+    .hidden {
+      display: none !important
+    }
+
+    /* loading */
+    #loading {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      background: radial-gradient(120% 90% at 50% 40%, #14203a 0%, #070a12 70%);
+      transition: opacity .6s;
+    }
+
+    #loading .bird {
+      font-size: 54px;
+      animation: bob 1.4s ease-in-out infinite;
+    }
+
+    @keyframes bob {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(-4deg)
+      }
+
+      50% {
+        transform: translateY(-10px) rotate(4deg)
+      }
+    }
+
+    #loading .txt {
+      font-size: 13px;
+      color: var(--fg-dim);
+      letter-spacing: 1px
+    }
+
+    #loading .bar {
+      width: 190px;
+      height: 3px;
+      background: rgba(255, 255, 255, .12);
+      border-radius: 2px;
+      overflow: hidden
+    }
+
+    #loading .bar i {
+      display: block;
+      height: 100%;
+      width: 40%;
+      background: var(--accent);
+      animation: slide 1.1s ease-in-out infinite;
+    }
+
+    @keyframes slide {
+      0% {
+        transform: translateX(-100%)
+      }
+
+      100% {
+        transform: translateX(350%)
+      }
+    }
+
+    #loading .err {
+      max-width: 80vw;
+      text-align: center;
+      color: #ffb3b3;
+      font-size: 12.5px;
+      line-height: 1.7
+    }
+
+    #loading .err code {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 8px 12px;
+      background: rgba(0, 0, 0, .45);
+      border-radius: 8px;
+      font-size: 11px;
+      color: #ffd7d7;
+      word-break: break-all;
+      text-align: left;
+    }
+
+    @media (max-width:760px) {
+      #sliders {
+        display: none
+      }
+
+      #titleCard span {
+        display: none
+      }
+
+      #hud {
+        font-size: 10.5px;
+        min-width: 150px
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="stage"></div>
+
+  <div id="ui">
+    <div id="topBar">
+      <div class="panel" id="titleCard">
+        <b>🦅🚲 鹈鹕骑自行车</b>
+        <span>程序化海岛 · 昼夜循环 · 物理化骑行姿态</span>
+      </div>
+      <div class="panel" id="topBtns">
+        <button id="btnPause" title="空格">⏸ 暂停</button>
+        <button id="btnNight" title="N">🌙 昼夜</button>
+        <button id="btnAudio" title="开关声音">🔇 静音</button>
+        <button id="btnBell" title="B">🔔 车铃</button>
+        <button id="btnSquawk">🦅 叫一声</button>
+        <button id="btnShot" title="P">📷 截图</button>
+        <button id="btnUI" title="H">👁 界面</button>
+        <button id="btnHelp">❔ 帮助</button>
+      </div>
+    </div>
+
+    <div class="panel" id="sliders">
+      <h4>骑行</h4>
+      <h4>骑手</h4>
+      <h4>翅膀</h4>
+      <h4>世界</h4>
+      <h4>渲染</h4>
+      <div class="srow"><span class="slab">色调映射</span>
+        <select id="tonemap" style="grid-column:2/4"></select>
+      </div>
+    </div>
+
+    <div class="panel" id="camBar"></div>
+
+    <div class="panel" id="hud">
+      <div class="hrow"><span class="hk">帧率</span><span class="hv" id="hudFps">–</span></div>
+      <div class="hrow"><span class="hk">车速</span><span class="hv" id="hudSpeed">–</span></div>
+      <div class="hrow"><span class="hk">里程</span><span class="hv" id="hudDist">–</span></div>
+      <div class="hrow"><span class="hk">时刻</span><span class="hv" id="hudTime">–</span></div>
+      <div class="hrow"><span class="hk">状态</span><span class="hv" id="hudAir">–</span></div>
+      <div class="hrow"><span class="hk">镜头</span><span class="hv" id="hudCam">–</span></div>
+      <div class="hrow"><span class="hk">开销</span><span class="hv" id="hudDraw">–</span></div>
+    </div>
+
+    <div class="panel" id="help">
+      <button class="close" onclick="document.getElementById('help').classList.add('hidden')">✕</button>
+      <h3>操作说明</h3>
+      <div><kbd>W</kbd><kbd>↑</kbd> 加速 · <kbd>S</kbd><kbd>↓</kbd> 刹车 · <kbd>A</kbd><kbd>D</kbd><kbd>←</kbd><kbd>→</kbd> 转向</div>
+      <div><kbd>Shift</kbd> 冲刺 · <kbd>Space</kbd> 暂停 · <kbd>R</kbd> 自动巡航</div>
+      <div><kbd>1</kbd>–<kbd>7</kbd> 切换机位 · <kbd>C</kbd> 循环机位 · <kbd>N</kbd> 昼夜</div>
+      <div><kbd>B</kbd> 车铃 · <kbd>P</kbd> 存图 · <kbd>H</kbd> 隐藏界面</div>
+      <div style="margin-top:10px;color:var(--fg-dim)">
+        鼠标拖拽可环绕视角，滚轮缩放。左侧面板可实时调参：让翅膀张开、把时刻拖到黄昏，看看会变成什么样。
+      </div>
+      <div style="margin-top:10px;color:var(--fg-dim);font-size:11.5px">
+        全场景由代码生成：地形、海浪、云、棕榈、羽毛质感、天空散射与 IBL 都是运行时算出来的，
+        连鹈鹕的羽毛贴图与车铃声也是。无任何外部素材。
+      </div>
+    </div>
+
+    <div class="panel" id="toast"></div>
+  </div>
+
+  <div id="loading">
+    <div class="bird">🦅🚲</div>
+    <div class="txt">正在生成海岛与鹈鹕…</div>
+    <div class="bar"><i></i></div>
+  </div>
+
+  <!-- three.js r160（随包内置，离线可用） -->
+  <script src="./three.min.js"></script>
+  <script>
+    window.PB = window.PB || {};
+    if (typeof THREE === 'undefined') {
+      document.getElementById('loading').innerHTML =
+        '<div class="err"><b>three.js 未加载</b><br><code>请确认 three.min.js 与 index.html 在同一目录</code></div>';
+    }
+  </script>
+
+  <script src="./src/util.js"></script>
+  <script src="./src/materials.js"></script>
+  <script src="./src/sky.js"></script>
+  <script src="./src/world.js"></script>
+  <script src="./src/bicycle.js"></script>
+  <script src="./src/pelican.js"></script>
+  <script src="./src/effects.js"></script>
+  <script src="./src/postfx.js"></script>
+  <script src="./src/audio.js"></script>
+  <script src="./src/main.js"></script>
+</body>
+
+</html>
