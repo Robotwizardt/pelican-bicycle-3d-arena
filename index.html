@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>鹈鹕骑自行车 3D · 八模型同题竞技场</title>
-<meta name="description" content="同一条初始 prompt，八个大模型各自写出的「鹈鹕骑自行车」Three.js 程序化 3D 页面，附耗时、token 与费用统计。">
+<title>鹈鹕骑自行车 3D · 九模型同题竞技场</title>
+<meta name="description" content="同一条初始 prompt，九个大模型各自写出的「鹈鹕骑自行车」Three.js 程序化 3D 页面，附耗时、token 与费用统计。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E%F0%9F%90%A6%3C/text%3E%3C/svg%3E">
 <style>
   :root{
@@ -181,11 +181,12 @@
 <body>
 
 <header class="wrap">
-  <span class="kicker">One prompt · Eight models · Eight 3D scenes</span>
-  <h1>鹈鹕骑自行车 <em>3D</em><br>八模型同题竞技场</h1>
+  <span class="kicker">One prompt · Nine models · Nine 3D scenes</span>
+  <h1>鹈鹕骑自行车 <em>3D</em><br>九模型同题竞技场</h1>
   <p class="lede">
-    同一条题目，八个大模型各自从零写出一个 Three.js 程序化 3D 页面：建模、交互、部署全包，
-    然后自己把访问链接交出来。八个页面放在同一个仓库里，点开就能看。
+    同一条题目，九个大模型各自从零写出一个 Three.js 程序化 3D 页面：建模、交互、部署全包，
+    然后自己把访问链接交出来。九个页面放在同一个仓库里，点开就能看。
+    前八个跑在同一天，第 9 个是一天后用同一个 prompt 补的。
   </p>
   <div class="prompt-box">
     <span class="lbl">第一批 · 4 个模型（05:11 → 09:59 UTC）· Prompt 原文</span>
@@ -193,7 +194,7 @@
     <code class="add">+ 忽略掉这个目录下的所有文件，自己新建个文件夹来执行，名字要把内容和模型名带上　<span style="color:var(--txt-faint)">（除 step-5-preview 外的三个都带这条）</span></code>
   </div>
   <div class="prompt-box">
-    <span class="lbl">第二批 · 4 个模型（12:39 → 15:56 UTC）· Prompt 原文（四个会话逐字一致）</span>
+    <span class="lbl">第二批 · 4 个模型（12:39 → 15:56 UTC）＋ 第三批 · 1 个模型（次日 23:02 → 00:14 UTC）· 同一个 Prompt 原文（五个会话逐字一致）</span>
     <code>生成一个鹈鹕骑自行车的 3D 页面，尽可能把你所有的能力全部都用上。然后上传到 CDN，把访问链接给我。
 
 新建文件夹 C:/Users/admin/pi-cwd-20260916/pelican-bicycle-3d-arena/pages/pelican-bicycle-3d-&lt;你的模型名&gt;/ 来执行，所有产出都写在这个新文件夹里，入口是它的 index.html，不需要构建步骤就能直接打开。
@@ -209,15 +210,15 @@
 <main class="wrap">
 
   <div class="strip">
-    <div><b>8</b><span>个模型 / 个页面</span></div>
-    <div><b>9.6 h</b><span>合计耗时</span></div>
-    <div><b>68.0 M</b><span>总 token（含缓存）</span></div>
-    <div><b>14.7 M</b><span>非缓存 token</span></div>
-    <div class="hi-cost"><b>$38.53</b><span>总花费（口径见下）</span></div>
+    <div><b>9</b><span>个模型 / 个页面</span></div>
+    <div><b>10.8 h</b><span>合计耗时</span></div>
+    <div><b>78.7 M</b><span>总 token（含缓存）</span></div>
+    <div><b>15.4 M</b><span>非缓存 token</span></div>
+    <div class="hi-cost"><b>$42.52</b><span>总花费（口径见下）</span></div>
   </div>
 
   <div class="sec">
-    <h2>八个结果页面</h2>
+    <h2>九个结果页面</h2>
     <p>按会话开始时间排序 · 点按钮直接打开</p>
   </div>
 
@@ -416,6 +417,30 @@
       </div>
     </article>
 
+    <!-- 9 -->
+    <article class="card">
+      <div class="card-top">
+        <span class="rank">9</span>
+        <span class="model" title="workbuddy / cn:glm-5.3">workbuddy · cn:glm-5.3</span>
+      </div>
+      <h3>Pelican Rider — 鹈鹕骑行<span class="sub">黄昏海面 · 实时遥测 · 实时调参</span></h3>
+      <p class="desc">单文件 51 KB：黄昏海面上的海岸公路，棕榈、路灯、车灯、星空与辉光随夜幕渐亮，鹈鹕的翅膀与喉囊都是程序化建模。右上角遥测 HUD 报车速／里程／踏频／风速／FPS／draw call，控制台能实时改巡航速度、海浪强度、镜头距离与高度、云量、夜幕与辉光，还能导出 .GLB。</p>
+      <div class="tags"><i>单文件 51 KB</i><i>实时调参面板</i><i>遥测 HUD</i><i>.GLB 导出</i></div>
+      <div class="metrics">
+        <div><b>72.6<small style="font-size:10px"> min</small></b><span>耗时</span></div>
+        <div><b>10.71 M</b><span>总 token</span></div>
+        <div><b>245</b><span>助手轮次</span></div>
+      </div>
+      <div class="cost"><b>$3.99</b><span>provider 记账 · 主会话</span></div>
+      <div class="open">
+        <a href="pages/pelican-bicycle-3d-cn-glm-5.3/">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>
+          打开页面
+        </a>
+        <div class="meta">/pages/pelican-bicycle-3d-cn-glm-5.3/　·　净 token 688,281　·　three.js 走 jsDelivr</div>
+      </div>
+    </article>
+
   </div>
 
   <div class="sec">
@@ -439,12 +464,13 @@
         <tr><td>6</td><td><code>grok-4.7</code></td><td class="num">52.5 min</td><td class="num">6,257,157</td><td class="num">776,197</td><td class="num">5,480,960</td><td class="num">78</td><td class="num">$4.99</td><td class="num">$4.99</td></tr>
         <tr><td>7</td><td><code>kimi-k3</code></td><td class="num">44.6 min</td><td class="num">1,593,545</td><td class="num cost-lo">102,727</td><td class="num">1,490,818</td><td class="num cost-lo">35</td><td class="num cost-lo">$1.16</td><td class="num cost-lo">$1.16</td></tr>
         <tr class="excluded"><td>8</td><td><code>gpt-5.6-sol</code> <span class="warn">降智</span></td><td class="num">12.3 min</td><td class="num">957,424</td><td class="num">64,123</td><td class="num">893,301</td><td class="num">30</td><td class="num">$2.98</td><td class="num">$2.98</td></tr>
-        <tr class="total"><td colspan="7">合计</td><td class="num">$34.48</td><td class="num">$38.53</td></tr>
+        <tr><td>9</td><td><code>cn:glm-5.3</code></td><td class="num">72.6 min</td><td class="num">10,714,172</td><td class="num">688,281</td><td class="num">10,025,891</td><td class="num">245</td><td class="num">$3.99</td><td class="num">$3.99</td></tr>
+        <tr class="total"><td colspan="7">合计（9 个模型）</td><td class="num">$38.47</td><td class="num">$42.52</td></tr>
       </tbody>
     </table>
   </div>
   <p class="note">
-    耗时按首尾消息时间戳之差计算，含工具调用与等待时间（八个会话各段相加 576.1 min ≈ 9.6 h，其中第一批四个 269.5 min）。
+    耗时按首尾消息时间戳之差计算，含工具调用与等待时间（九个会话各段相加 648.7 min ≈ 10.8 h，其中第一批四个 269.5 min）。
     长上下文反复重发导致缓存读取占了总量的 85%–96%，
     因此「总 token」看着很唬人；「非缓存 token」= input + output，更接近模型真正处理的新内容量。
     <code>step-5-preview</code> 的 74.1 min 是纯建站任务耗时，之后用户又追问了 3 轮 CDN 发布原理，整段会话为 238.6 min。
@@ -457,6 +483,15 @@
     与第一批（统一按官方单价重算）口径不同，<b>两批之间不要横向比价</b>，只跟同批比。
     <code>hy4-preview</code> 净 token 高达 1091 万，是因为它的网关几乎没命中缓存（input 1047 万才配对 485 万缓存读），这也直接把它的费用顶到 $10.03。
     四个新会话里 <code>cc/gpt-6-sol</code> 另有 10 + 7 次 0 token 的空调用（编排用，无计费），已并入轮次外不计。
+  </p>
+  <p class="note">
+    <b style="color:var(--txt-dim)">第三批（9）口径：</b>
+    一天后用<b>逐字相同</b>的第二批 prompt 补跑的一个，落点 <code>pages/pelican-bicycle-3d-cn-glm-5.3/</code>
+    （模型名里的冒号被它自己洗成了连字符——Windows 目录名不允许 <code>:</code>）。
+    prompt 里那句「已经做过<b>四版</b>、另外<b>四个</b>文件夹」早就过时了（当时实际有 8 个），它没被误导：
+    其他 8 个页面的目录名在整份会话里一次都没出现过。
+    费用同样是 provider 记账（workbuddy）：<code>cn:glm-5.3</code> 登记单价 $1.4 / $4.4 / $0.26，逐条相乘后分毫不差，$0.77 + $0.62 + $2.61 = $3.99。
+    只有 1 条用户消息、245 轮，缓存命中 93.6%，是九个里最省事的一个。
   </p>
   <p class="note">
     <b style="color:var(--txt-dim)">一条作废记录：</b>
@@ -478,7 +513,7 @@
     ② <code>claude-opus-5-5</code> 的费用是手算的：它的 provider cost 配置在会话末尾才补上，
     transcript 里 93 次请求的费用记录全是 0。
     ③ 「含子代理」列包含 <code>gpt-6-astra</code> 的 3 个子代理、<code>claude-opus-5-5</code> 的 7 个子代理
-    —— 后者那 6 轮视觉审查实际跑在 <code>cn:glm-5.3</code> 上，是另一个模型的钱。
+    —— 后者那 6 轮视觉审查实际跑在 <code>cn:glm-5.3</code> 上（就是 #9 那个模型），是另一个模型的钱。
     完整拆分见 <a href="https://github.com/Robotwizardt/pelican-bicycle-3d-arena#readme" style="color:var(--accent)">README.md</a>。
   </p>
 
@@ -486,7 +521,7 @@
 
 <footer>
   <div class="wrap row">
-    <span>八个模型 · 一条 prompt · 八个 3D 页面 —— 2026-09-30 生成，合并于同一仓库。</span>
+    <span>九个模型 · 一条 prompt · 九个 3D 页面 —— 2026-09-30 ~ 10-01 生成，合并于同一仓库。</span>
     <span>
       <a href="https://github.com/Robotwizardt/pelican-bicycle-3d-arena">GitHub 仓库</a>
       &nbsp;·&nbsp;
