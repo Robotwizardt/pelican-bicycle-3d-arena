@@ -38,7 +38,9 @@ const GradePass = {
     uTime: { value: 0 },
     uNight: { value: 0 },
     uMotion: { value: 0 },
-    uAberration: { value: 0.0015 },
+    // 色散基值。之前的 0.0015 配着 “速度 ×6” 的系数，高速时能到 0.0105，
+    // 屏幕上每条边都镶一道彩虹边。现在压到只有轻微镜头感。
+    uAberration: { value: 0.0007 },
     uSaturation: { value: 1.06 },
     uLift: { value: new THREE.Vector3(0.0, 0.0, 0.01) },
     uGain: { value: new THREE.Vector3(1.02, 1.0, 0.97) },
@@ -68,8 +70,9 @@ const GradePass = {
       vec2 c = uv - 0.5;
       float r2 = dot( c, c );
 
-      // 速度越高，边缘轻微色散（像镜头）
-      float ab = uAberration * ( 1.0 + uMotion * 6.0 );
+      // 速度越高，边缘轻微色散（像镜头）。系数从 6 降到 2.5，
+      // 否则巡航速度下就已经是一圈明显的彩色描边。
+      float ab = uAberration * ( 1.0 + uMotion * 2.5 );
       vec3 col;
       col.r = texture2D( tDiffuse, uv + c * ab ).r;
       col.g = texture2D( tDiffuse, uv ).g;

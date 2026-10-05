@@ -177,7 +177,9 @@ export function createWeather({ scene, skyUniforms, seaUniforms, sun, hemi, dirL
     const baseFog = [0.0055, 0.008, 0.026, 0.016, 0.018][weather];
     fog.density = baseFog * lerp(1, 1.5, night * 0.5);
     const fc = FOG_COLORS[['clear', 'cloudy', 'fog', 'rain', 'snow'][weather]];
-    fog.color.copy(fc).lerp(new THREE.Color('#1b2436'), night * 0.7);
+    // 夜色要压得足够深。之前只 lerp 0.7，21 点多的雾还是灰蓝色，
+    // 结果「夜航」模式的天空看上去跟黄昏一样亮。
+    fog.color.copy(fc).lerp(new THREE.Color('#0e1524'), night * 0.92);
 
     /* --- 太阳位置指示（在天空 shader 里已经有了，这里同步海面反射色） --- */
     skyUniforms.uHorizonTint && skyUniforms.uHorizonTint.value.copy(fog.color);
@@ -234,6 +236,10 @@ export function createWeather({ scene, skyUniforms, seaUniforms, sun, hemi, dirL
     if (seaUniforms) {
       seaUniforms.uSunDir.value.copy(sunDir);
       seaUniforms.uSunColor.value.copy(sunColor);
+      // 水色也要随夜色变暗。之前浅水色是固定的亮青（#2fa2a6），
+      // 夜里海面亮得跟白天一样，夜航模式完全失去氛围。
+      seaUniforms.uShallowColor.value.set(0x2fa2a6).lerp(new THREE.Color(0x0d2b3d), night * 0.85);
+      seaUniforms.uDeepColor.value.set(0x0a3f5e).lerp(new THREE.Color(0x06121f), night * 0.85);
       seaUniforms.uFogColor.value.copy(fog.color);
       seaUniforms.uFogDensity.value = fog.density;
       seaUniforms.uHorizonTint.value.copy(fog.color);

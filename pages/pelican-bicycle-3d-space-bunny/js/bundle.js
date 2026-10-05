@@ -48805,7 +48805,7 @@ void main() {
       const baseFog = [55e-4, 8e-3, 0.026, 0.016, 0.018][weather];
       fog.density = baseFog * lerp2(1, 1.5, night * 0.5);
       const fc = FOG_COLORS[["clear", "cloudy", "fog", "rain", "snow"][weather]];
-      fog.color.copy(fc).lerp(new Color("#1b2436"), night * 0.7);
+      fog.color.copy(fc).lerp(new Color("#0e1524"), night * 0.92);
       skyUniforms.uHorizonTint && skyUniforms.uHorizonTint.value.copy(fog.color);
       const raining = weather === 3;
       rainMat.opacity = lerp2(rainMat.opacity, raining ? 0.75 : 0, 1 - Math.exp(-dt * 2));
@@ -48853,6 +48853,8 @@ void main() {
       if (seaUniforms) {
         seaUniforms.uSunDir.value.copy(sunDir);
         seaUniforms.uSunColor.value.copy(sunColor);
+        seaUniforms.uShallowColor.value.set(3121830).lerp(new Color(863037), night * 0.85);
+        seaUniforms.uDeepColor.value.set(671582).lerp(new Color(397855), night * 0.85);
         seaUniforms.uFogColor.value.copy(fog.color);
         seaUniforms.uFogDensity.value = fog.density;
         seaUniforms.uHorizonTint.value.copy(fog.color);
@@ -49309,7 +49311,9 @@ void main() {
       uTime: { value: 0 },
       uNight: { value: 0 },
       uMotion: { value: 0 },
-      uAberration: { value: 15e-4 },
+      // 色散基值。之前的 0.0015 配着 “速度 ×6” 的系数，高速时能到 0.0105，
+      // 屏幕上每条边都镶一道彩虹边。现在压到只有轻微镜头感。
+      uAberration: { value: 7e-4 },
       uSaturation: { value: 1.06 },
       uLift: { value: new Vector3(0, 0, 0.01) },
       uGain: { value: new Vector3(1.02, 1, 0.97) }
@@ -49344,8 +49348,9 @@ void main() {
       vec2 c = uv - 0.5;
       float r2 = dot( c, c );
 
-      // \u901F\u5EA6\u8D8A\u9AD8\uFF0C\u8FB9\u7F18\u8F7B\u5FAE\u8272\u6563\uFF08\u50CF\u955C\u5934\uFF09
-      float ab = uAberration * ( 1.0 + uMotion * 6.0 );
+      // \u901F\u5EA6\u8D8A\u9AD8\uFF0C\u8FB9\u7F18\u8F7B\u5FAE\u8272\u6563\uFF08\u50CF\u955C\u5934\uFF09\u3002\u7CFB\u6570\u4ECE 6 \u964D\u5230 2.5\uFF0C
+      // \u5426\u5219\u5DE1\u822A\u901F\u5EA6\u4E0B\u5C31\u5DF2\u7ECF\u662F\u4E00\u5708\u660E\u663E\u7684\u5F69\u8272\u63CF\u8FB9\u3002
+      float ab = uAberration * ( 1.0 + uMotion * 2.5 );
       vec3 col;
       col.r = texture2D( tDiffuse, uv + c * ab ).r;
       col.g = texture2D( tDiffuse, uv ).g;
