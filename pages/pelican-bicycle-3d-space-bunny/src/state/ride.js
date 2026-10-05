@@ -249,6 +249,7 @@ export function createRide({ scene, cape, lighthouse, bike, pelican, camera, con
     const stop = STOPS[state.stopIndex];
     if (!stop || stop.done) {
       state.mode = MODE.CRUISE;
+      state.brake = 0; // 表演结束必须松闸，否则会一直停在原地
       return;
     }
     stop.done = true;
@@ -298,8 +299,11 @@ export function createRide({ scene, cape, lighthouse, bike, pelican, camera, con
     if (state.mode !== MODE.FLIGHT) stepSpeed(dt);
     const braking =
       (state.manual && state.brake > 0.05) ||
-      (state.mode === MODE.FISH || state.mode === MODE.DELIVER || state.mode === MODE.LIGHT && !stopDone(this));
-    state.brake = braking && !state.manual ? 1 : state.brake;
+      (state.mode === MODE.FISH || state.mode === MODE.DELIVER || state.mode === MODE.LIGHT) && !stopDone(this);
+    // 之前写成 `? 1 : state.brake`，不刹车时保留了旧值。
+    // 于是第一次投递结束后 brake 永久卡在 1，鹈鹕再也骑不动了。
+    // 手动挡时 brake 由 setInput 写，这里不能覆写。
+    if (!state.manual) state.brake = braking ? 1 : 0;
 
     /* ---- 位置与姿态 ---- */
     let sm = track.at(state.s);
@@ -518,17 +522,20 @@ export function createRide({ scene, cape, lighthouse, bike, pelican, camera, con
     const yaw = sm.heading;
 
     if (cam.mode === 'chase') {
-      // 跟车略高、略偏后，always 能把鹈鹕连车一起收进画面
+      // 跟车略高、略偏后，always 能把鹈鹕连车一起收进画面。
+      // 抬得比较高（up 3.2）是因为海岬是「路贴着崖、崖下面是海」的地形：
+      // 机位太低时视线全被路面和护栏占满，海反而看不见了。
       const back = 5.2 + state.speed * 0.18;
-      const up = 2.35 + state.speed * 0.06;
+      const up = 3.2 + state.speed * 0.07;
       camDesired.set(
         bikePos.x - Math.sin(yaw) * back,
         bikePos.y + up,
         bikePos.z - Math.cos(yaw) * back
       );
-      // 向海面侧偏一点，构图里留出海与灯塔
-      camDesired.x += Math.cos(yaw) * 1.25;
-      camDesired.z -= Math.sin(yaw) * 1.25;
+      // 向海面侧偏一点，构图里留出海与灯塔。
+      // 偏移量要大：海就在路的外侧，偏少了海面就被路肩和护栏挡住。
+      camDesired.x += Math.cos(yaw) * 3.4;
+      camDesired.z -= Math.sin(yaw) * 3.4;
       // 视线落在鹈鹕胸口而不是车前方——这样主体总在画面中央
       camTarget.set(
         bikePos.x + Math.sin(yaw) * 0.35,
@@ -538,7 +545,7 @@ export function createRide({ scene, cape, lighthouse, bike, pelican, camera, con
       const k = 1 - Math.exp(-3.4 * dt);
       cam.pos.lerp(camDesired, k);
       cam.look.lerp(camTarget, k);
-      cam.fov = damp(cam.fov, 52 + state.speed * 0.85, 3, dt);
+      cam.fov = damp(cam.fov, 56 + state.speed * 0.85, 3, dt);
     } else if (cam.mode === 'pelican') {
       // 鹈鹕第一人称：挂在头部
       const head = pelican.headPivot;

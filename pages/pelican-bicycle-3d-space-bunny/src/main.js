@@ -459,13 +459,16 @@ function boot() {
   }
 
   function introCamera(dt) {
-    // 开场：从海面低角度缓缓升起，同时看向骑手
+    // 开场：从海面一侧缓缓升起，同时看向骑手。
+    // 关键是往海面偏：站在陆侧只能看到路面和内陆，看不到海岬最漂亮的那面悬崖。
     const bikePos = bike.root.position;
+    // sNearest 只返回弧长，要拿外法线还得再 at() 一次
+    const sm = cape.track.at(cape.track.sNearest(bikePos));
     const angle = ride.state.timeline * 0.22;
     camDesired.set(
-      bikePos.x + Math.cos(angle) * 9 - 3,
-      bikePos.y + 2.2 + Math.sin(ride.state.timeline * 0.35) * 0.6,
-      bikePos.z + Math.sin(angle) * 9 - 4
+      bikePos.x + Math.cos(angle) * 9 + sm.outward.x * 5.5,
+      bikePos.y + 3.6 + Math.sin(ride.state.timeline * 0.35) * 0.6,
+      bikePos.z + Math.sin(angle) * 9 + sm.outward.z * 5.5
     );
     camera.position.lerp(camDesired, 1 - Math.exp(-1.6 * dt));
     camLook.set(bikePos.x, bikePos.y + 1.1, bikePos.z);

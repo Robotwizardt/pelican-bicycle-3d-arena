@@ -48355,6 +48355,7 @@ void main() {
       const stop = STOPS[state.stopIndex];
       if (!stop || stop.done) {
         state.mode = MODE.CRUISE;
+        state.brake = 0;
         return;
       }
       stop.done = true;
@@ -48394,8 +48395,8 @@ void main() {
       elapsed += dt;
       const autoTime = opts.autoTime !== false;
       if (state.mode !== MODE.FLIGHT) stepSpeed(dt);
-      const braking = state.manual && state.brake > 0.05 || (state.mode === MODE.FISH || state.mode === MODE.DELIVER || state.mode === MODE.LIGHT && !stopDone(this));
-      state.brake = braking && !state.manual ? 1 : state.brake;
+      const braking = state.manual && state.brake > 0.05 || (state.mode === MODE.FISH || state.mode === MODE.DELIVER || state.mode === MODE.LIGHT) && !stopDone(this);
+      if (!state.manual) state.brake = braking ? 1 : 0;
       let sm = track.at(state.s);
       if (state.mode === MODE.INTRO) {
         state.timeline += dt;
@@ -48565,14 +48566,14 @@ void main() {
       const yaw = sm.heading;
       if (cam.mode === "chase") {
         const back = 5.2 + state.speed * 0.18;
-        const up = 2.35 + state.speed * 0.06;
+        const up = 3.2 + state.speed * 0.07;
         camDesired.set(
           bikePos.x - Math.sin(yaw) * back,
           bikePos.y + up,
           bikePos.z - Math.cos(yaw) * back
         );
-        camDesired.x += Math.cos(yaw) * 1.25;
-        camDesired.z -= Math.sin(yaw) * 1.25;
+        camDesired.x += Math.cos(yaw) * 3.4;
+        camDesired.z -= Math.sin(yaw) * 3.4;
         camTarget.set(
           bikePos.x + Math.sin(yaw) * 0.35,
           bikePos.y + 1.15,
@@ -48581,7 +48582,7 @@ void main() {
         const k = 1 - Math.exp(-3.4 * dt);
         cam.pos.lerp(camDesired, k);
         cam.look.lerp(camTarget, k);
-        cam.fov = damp2(cam.fov, 52 + state.speed * 0.85, 3, dt);
+        cam.fov = damp2(cam.fov, 56 + state.speed * 0.85, 3, dt);
       } else if (cam.mode === "pelican") {
         const head = pelican.headPivot;
         head.updateWorldMatrix(true, false);
@@ -49664,11 +49665,12 @@ void main() {
     }
     function introCamera(dt) {
       const bikePos = bike.root.position;
+      const sm = cape.track.at(cape.track.sNearest(bikePos));
       const angle = ride.state.timeline * 0.22;
       camDesired.set(
-        bikePos.x + Math.cos(angle) * 9 - 3,
-        bikePos.y + 2.2 + Math.sin(ride.state.timeline * 0.35) * 0.6,
-        bikePos.z + Math.sin(angle) * 9 - 4
+        bikePos.x + Math.cos(angle) * 9 + sm.outward.x * 5.5,
+        bikePos.y + 3.6 + Math.sin(ride.state.timeline * 0.35) * 0.6,
+        bikePos.z + Math.sin(angle) * 9 + sm.outward.z * 5.5
       );
       camera.position.lerp(camDesired, 1 - Math.exp(-1.6 * dt));
       camLook.set(bikePos.x, bikePos.y + 1.1, bikePos.z);
