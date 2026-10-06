@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>鹈鹕骑自行车 3D · 九模型同题竞技场</title>
-<meta name="description" content="同一条初始 prompt，九个大模型各自写出的「鹈鹕骑自行车」Three.js 程序化 3D 页面，附耗时、token 与费用统计。">
+<title>鹈鹕骑自行车 3D · 十一模型同题竞技场</title>
+<meta name="description" content="同一条初始 prompt，十一个大模型各自写出的「鹈鹕骑自行车」Three.js 程序化 3D 页面，附耗时、token 与费用统计。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E%F0%9F%90%A6%3C/text%3E%3C/svg%3E">
 <style>
   :root{
@@ -181,12 +181,12 @@
 <body>
 
 <header class="wrap">
-  <span class="kicker">One prompt · Nine models · Nine 3D scenes</span>
-  <h1>鹈鹕骑自行车 <em>3D</em><br>九模型同题竞技场</h1>
+  <span class="kicker">Three prompts · Eleven models · Eleven 3D scenes</span>
+  <h1>鹈鹕骑自行车 <em>3D</em><br>十一模型同题竞技场</h1>
   <p class="lede">
-    同一条题目，九个大模型各自从零写出一个 Three.js 程序化 3D 页面：建模、交互、部署全包，
-    然后自己把访问链接交出来。九个页面放在同一个仓库里，点开就能看。
-    前八个跑在同一天，第 9 个是一天后用同一个 prompt 补的。
+    同一条题目，十一个大模型各自从零写出一个 Three.js 程序化 3D 页面：建模、交互、部署全包，
+    然后自己把访问链接交出来。十一个页面放在同一个仓库里，点开就能看。
+    前八个跑在同一天，第 9 个隔一天补，第 10、11 个又隔了四天 —— 后两批的 prompt 都改过。
   </p>
   <div class="prompt-box">
     <span class="lbl">第一批 · 4 个模型（05:11 → 09:59 UTC）· Prompt 原文</span>
@@ -205,20 +205,32 @@
 
 拿不准的地方按你自己的判断做。</code>
   </div>
+  <div class="prompt-box">
+    <span class="lbl">第四批 · 2 个模型（2026-10-05 11:57 → 12:10 UTC）· Prompt 原文（取自 space-bunny 会话，逐字）</span>
+    <code>生成一个鹈鹕骑自行车的 3D 页面，尽可能把你所有的能力全部都用上。然后上传到 CDN，把访问链接给我。
+
+新建文件夹 C:/Users/admin/pi-cwd-20260916/pelican-bicycle-3d-arena/pages/pelican-bicycle-3d-&lt;你的模型名&gt;/ 来执行，所有产出都写在这个新文件夹里，入口是它的 index.html，不需要构建步骤就能直接打开。
+
+这个题目我之前已经让别的模型做过几版，成果就在 pages/ 下的另外文件夹里。本次全程不要读取、列出、搜索那四个文件夹里的任何内容，也不要看我的历史会话记录和我在网上发布的那几页——完全按你自己的思路写。除此之外联网随便用，教程素材都可以查。
+
+另外：这个目录已经在一个发布到 GitHub Pages 的 git 仓库里。不要 git init，不要新建仓库或子仓库，也不要在文件夹里留 .git。发布就直接把你自己的文件夹 commit 并 push 到当前仓库（只 add 你自己的文件夹，不要改动或提交其他文件）；如果没有推送权限或推送失败，停下来告诉我，不要另建仓库。
+
+拿不准的地方按你自己的判断做。</code>
+  </div>
 </header>
 
 <main class="wrap">
 
   <div class="strip">
-    <div><b>9</b><span>个模型 / 个页面</span></div>
-    <div><b>10.8 h</b><span>合计耗时</span></div>
-    <div><b>78.7 M</b><span>总 token（含缓存）</span></div>
-    <div><b>15.4 M</b><span>非缓存 token</span></div>
+    <div><b>11</b><span>个模型 / 个页面</span></div>
+    <div><b>17.4 h</b><span>合计耗时</span></div>
+    <div><b>129.7 M</b><span>总 token（含缓存）</span></div>
+    <div><b>16.5 M</b><span>非缓存 token</span></div>
     <div class="hi-cost"><b>$42.52</b><span>总花费（口径见下）</span></div>
   </div>
 
   <div class="sec">
-    <h2>九个结果页面</h2>
+    <h2>十一个结果页面</h2>
     <p>按会话开始时间排序 · 点按钮直接打开</p>
   </div>
 
@@ -441,6 +453,54 @@
       </div>
     </article>
 
+    <!-- 10 -->
+    <article class="card">
+      <div class="card-top">
+        <span class="rank">10</span>
+        <span class="model" title="workbuddy / cn:kimi-k2.8-preview">workbuddy · cn:kimi-k2.8-preview</span>
+      </div>
+      <h3>Pelican on a Bicycle · 3D Arena<span class="sub">落日海面 · GPU 蒙皮 · 无构建步骤</span></h3>
+      <p class="desc">海边木板路上骑车的鹈鹕：Three.js r160 已本地化到 <code>vendor/</code>，自行车、鹈鹕、画廊小屋全代码生成。自研 GPU 蒙皮把每段肢体包成「蒙皮盒」、顶点在 vertex shader 里旋转，代替骨骼网格；三段自定义 GLSL（天空穹顶、三波 Gerstner 海面、蒙皮顶点着色器）；真实齿比 3.82 驱动双腿；海浪/风声/车铃/鹈鹕叫全用 Web Audio 合成；四张 AI 生成贴图另有 Canvas 系统兜底。</p>
+      <div class="tags"><i>GPU 蒙皮</i><i>Gerstner 海面</i><i>昼夜循环</i><i>AI 贴图 + 兜底</i></div>
+      <div class="metrics">
+        <div><b>39.9<small style="font-size:10px"> min</small></b><span>耗时</span></div>
+        <div><b>4.54 M</b><span>总 token</span></div>
+        <div><b>86</b><span>助手轮次</span></div>
+      </div>
+      <div class="cost"><b>—</b><span>provider 未登记单价</span></div>
+      <div class="open">
+        <a href="pages/pelican-bicycle-3d-kimi-k2.8-preview/">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>
+          打开页面
+        </a>
+        <div class="meta">/pages/pelican-bicycle-3d-kimi-k2.8-preview/　·　18 文件 8.9 MB（含 6.1 MB AI 落日图）　·　会话记录已丢失，token 按 acp.log 推算</div>
+      </div>
+    </article>
+
+    <!-- 11 -->
+    <article class="card">
+      <div class="card-top">
+        <span class="rank">11</span>
+        <span class="model" title="workbuddy / cn:space-bunny">workbuddy · cn:space-bunny</span>
+      </div>
+      <h3>灯塔邮路 · 鹈鹕骑自行车<span class="sub">Pelican Post · 海岬环岛送报</span></h3>
+      <p class="desc">大白鹈鹕踩着全蹼足蹬邮政自行车，沿黄金时刻的海岬环岛送报：时间轴 0–24 h、天气与风力可调、三档画质，逗尾跟拍 / 手动驾驶 / 盘旋灯塔三种视角；投递、渔获、里程、环岛四路计数，配冷知识卡片；海浪、风、车轮、鹈鹕全用 Web Audio 合成。2.0 MB 单包（另附 <code>tools/build.mjs</code> 与源码，但打开 <code>index.html</code> 无需构建）。</p>
+      <div class="tags"><i>单包 2 MB</i><i>天气 + 昼夜</i><i>三种视角</i><i>618 轮全场最多</i></div>
+      <div class="metrics">
+        <div><b class="hi">356.5<small style="font-size:10px"> min</small></b><span>耗时</span></div>
+        <div><b class="hi">46.45 M</b><span>总 token</span></div>
+        <div><b class="hi">618</b><span>助手轮次</span></div>
+      </div>
+      <div class="cost"><b>—</b><span>provider 未登记单价</span></div>
+      <div class="open">
+        <a href="pages/pelican-bicycle-3d-space-bunny/">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>
+          打开页面
+        </a>
+        <div class="meta">/pages/pelican-bicycle-3d-space-bunny/　·　净 token 1,141,987　·　耗时 5.9 h，全场最久（开了 max 思考档）</div>
+      </div>
+    </article>
+
   </div>
 
   <div class="sec">
@@ -465,12 +525,14 @@
         <tr><td>7</td><td><code>kimi-k3</code></td><td class="num">44.6 min</td><td class="num">1,593,545</td><td class="num cost-lo">102,727</td><td class="num">1,490,818</td><td class="num cost-lo">35</td><td class="num cost-lo">$1.16</td><td class="num cost-lo">$1.16</td></tr>
         <tr class="excluded"><td>8</td><td><code>gpt-5.6-sol</code> <span class="warn">降智</span></td><td class="num">12.3 min</td><td class="num">957,424</td><td class="num">64,123</td><td class="num">893,301</td><td class="num">30</td><td class="num">$2.98</td><td class="num">$2.98</td></tr>
         <tr><td>9</td><td><code>cn:glm-5.3</code></td><td class="num">72.6 min</td><td class="num">10,714,172</td><td class="num">688,281</td><td class="num">10,025,891</td><td class="num">245</td><td class="num">$3.99</td><td class="num">$3.99</td></tr>
-        <tr class="total"><td colspan="7">合计（9 个模型）</td><td class="num">$38.47</td><td class="num">$42.52</td></tr>
+        <tr><td>10</td><td><code>cn:kimi-k2.8-preview</code></td><td class="num">39.9 min</td><td class="num">4,538,999 <span style="color:var(--txt-faint)">*</span></td><td class="num">—</td><td class="num">—</td><td class="num">86</td><td class="num">—</td><td class="num">—</td></tr>
+        <tr><td>11</td><td><code>cn:space-bunny</code></td><td class="num hi">356.5 min</td><td class="num hi">46,446,495</td><td class="num">1,141,987</td><td class="num">45,304,508</td><td class="num hi">618</td><td class="num">—</td><td class="num">—</td></tr>
+        <tr class="total"><td colspan="7">合计（11 个模型）</td><td class="num">$38.47</td><td class="num">$42.52</td></tr>
       </tbody>
     </table>
   </div>
   <p class="note">
-    耗时按首尾消息时间戳之差计算，含工具调用与等待时间（九个会话各段相加 648.7 min ≈ 10.8 h，其中第一批四个 269.5 min）。
+    耗时按首尾消息时间戳之差计算，含工具调用与等待时间（十一个会话各段相加 1045.1 min ≈ 17.4 h，其中第一批四个 269.5 min，第四批两个占 396.4 min）。
     长上下文反复重发导致缓存读取占了总量的 85%–96%，
     因此「总 token」看着很唬人；「非缓存 token」= input + output，更接近模型真正处理的新内容量。
     <code>step-5-preview</code> 的 74.1 min 是纯建站任务耗时，之后用户又追问了 3 轮 CDN 发布原理，整段会话为 238.6 min。
@@ -491,7 +553,21 @@
     prompt 里那句「已经做过<b>四版</b>、另外<b>四个</b>文件夹」早就过时了（当时实际有 8 个），它没被误导：
     其他 8 个页面的目录名在整份会话里一次都没出现过。
     费用同样是 provider 记账（workbuddy）：<code>cn:glm-5.3</code> 登记单价 $1.4 / $4.4 / $0.26，逐条相乘后分毫不差，$0.77 + $0.62 + $2.61 = $3.99。
-    只有 1 条用户消息、245 轮，缓存命中 93.6%，是九个里最省事的一个。
+    只有 1 条用户消息、245 轮，缓存命中 93.6%。
+  </p>
+  <p class="note">
+    <b style="color:var(--txt-dim)">第四批（10–11）口径：</b>
+    第三批之后隔了四天，2026-10-05 11:57 与 12:10 UTC 另跑的两个，落点也在 <code>pages/</code> 下，
+    同样是「只 add 自己的文件夹、自己 commit + push 到当前仓库」，两个目录都没有嵌套 <code>.git</code>。
+    prompt 把第三批里写死的「做过四版 / 另外四个文件夹」改成了「做过几版 / 另外文件夹」——数字不再写死。
+    <code>cn:space-bunny</code> 跑了 <b>356.5 min / 618 轮</b>，是全场地最久、轮次最多的一场，缓存命中 97.5%，
+    非缓存 token 1,141,987；它的 token 与轮次都是 transcript 里 <code>usage</code> 逐条累加。
+    <code>cn:kimi-k2.8-preview</code> 的 transcript（会话 <code>01a10bed-6fb9</code>）已经不在会话库里，只剩
+    <code>.acp.json</code> 与 <code>acp.log</code>：它的 39.9 min / 86 轮 / 总 token 4,538,999 是按 <code>acp.log</code> 里
+    86 条逐轮上下文<code>tokens=</code>相加推算的——拿 <code>cn:space-bunny</code> 交叉验证过，这种推算与 usage 累加的差是 0.39%。
+    它的非缓存 / 缓存读取 / 费用没有数据源，表格里记「—」。
+    这两个模型的单价在 <code>models.json</code> 里没登记、provider 也没回记 <code>cost</code>，
+    所以费用列同样是「—」，<b>合计里的 $38.47 / $42.52 仍只包含 1–9</b>。
   </p>
   <p class="note">
     <b style="color:var(--txt-dim)">一条作废记录：</b>
@@ -521,7 +597,7 @@
 
 <footer>
   <div class="wrap row">
-    <span>九个模型 · 一条 prompt · 九个 3D 页面 —— 2026-09-30 ~ 10-01 生成，合并于同一仓库。</span>
+    <span>十一个模型 · 三套 prompt · 十一个 3D 页面 —— 2026-09-30 ~ 10-05 生成，合并于同一仓库。</span>
     <span>
       <a href="https://github.com/Robotwizardt/pelican-bicycle-3d-arena">GitHub 仓库</a>
       &nbsp;·&nbsp;

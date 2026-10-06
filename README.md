@@ -1,9 +1,9 @@
-# 🐦 鹈鹕骑自行车 3D · 九模型同题竞技场
+# 🐦 鹈鹕骑自行车 3D · 十一模型同题竞技场
 
-同一条题目，九个大模型各自从零写出一个「鹈鹕骑自行车」的 Three.js 程序化 3D 页面，
-自行完成建模、交互、部署，然后自己把访问链接交出来。九个页面放在同一个仓库里。
+同一条题目，十一个大模型各自从零写出一个「鹈鹕骑自行车」的 Three.js 程序化 3D 页面，
+自行完成建模、交互、部署，然后自己把访问链接交出来。十一个页面放在同一个仓库里。
 
-共两套 prompt、分三批跑（见 §二）：
+共三套 prompt、分四批跑（见 §二）：
 
 - **第一批 4 个**（2026-09-30 05:11 → 09:59 UTC）：原本分散在三个 GitHub 仓库和一个 dataecho
   临时站点上，已合并进本仓库（原仓库 `pelican-ride-3d`、`pelican-bicycle-3d-deepseek-v4.1-flash`、
@@ -11,8 +11,10 @@
 - **第二批 4 个**（同日 12:39 → 15:56 UTC）：带着新 prompt 跑的，产出直接提交到本仓库。
 - **第三批 1 个**（次日 23:02 → 00:14 UTC）：用第二批**逐字相同**的 prompt 补跑的一个
   （`cn:glm-5.3`），产出同样直接提交到本仓库。
+- **第四批 2 个**（2026-10-05 11:57 → 12:10 UTC）：prompt 在第二批基础上把写死的
+  「做过四版 / 另外四个文件夹」改成「做过几版 / 另外文件夹」，产出同样直接提交到本仓库。
 
-- **落地页（九页入口）**：https://robotwizardt.github.io/pelican-bicycle-3d-arena/
+- **落地页（十一页入口）**：https://robotwizardt.github.io/pelican-bicycle-3d-arena/
 - 仓库：https://github.com/Robotwizardt/pelican-bicycle-3d-arena
 
 ---
@@ -30,8 +32,10 @@
 | 7 | `kimi-k3` | https://robotwizardt.github.io/pelican-bicycle-3d-arena/pages/pelican-bicycle-3d-kimi-k3/ | 鹈鹕快递员 · Pelican Courier 3D |
 | 8 | `gpt-5.6-sol` ⚠️ | https://robotwizardt.github.io/pelican-bicycle-3d-arena/pages/pelican-bicycle-3d-gpt-5.6-sol/ | Pelican Velocity — 潮汐骑行竞技场 |
 | 9 | `cn:glm-5.3` | https://robotwizardt.github.io/pelican-bicycle-3d-arena/pages/pelican-bicycle-3d-cn-glm-5.3/ | Pelican Rider — 鹈鹕骑行 · 3D |
+| 10 | `cn:kimi-k2.8-preview` | https://robotwizardt.github.io/pelican-bicycle-3d-arena/pages/pelican-bicycle-3d-kimi-k2.8-preview/ | Pelican on a Bicycle · 3D Arena |
+| 11 | `cn:space-bunny` | https://robotwizardt.github.io/pelican-bicycle-3d-arena/pages/pelican-bicycle-3d-space-bunny/ | 灯塔邮路 · 鹈鹕骑自行车 \| Pelican Post |
 
-> 顺序 = 会话开始时间（第一批 UTC 2026-09-30 05:11 → 09:59，第二批 12:39 → 13:14，第三批次日 23:02 → 00:14）。
+> 顺序 = 会话开始时间（第一批 UTC 2026-09-30 05:11 → 09:59，第二批 12:39 → 13:14，第三批次日 23:02 → 00:14，第四批 2026-10-05 11:57 → 12:10）。
 > ⚠️ #8 `gpt-5.6-sol` 那一轮**模型被降智**，页面能打开但水平不作数，**不计入对比**，仅作留档。
 > jsDelivr 镜像：`https://cdn.jsdelivr.net/gh/Robotwizardt/pelican-bicycle-3d-arena@main/pages/<slug>/index.html`
 > —— 注意 jsDelivr 对 `.html` 一律返回 `text/plain`（防滥用），只能当**下载**用，不能"打开即玩"。
@@ -98,6 +102,31 @@
 
 ---
 
+### 第四批（#10 / #11）换成「不写死数字」的版本
+
+四天后（2026-10-05）又跑了两个。prompt 只改了两处：「做过**四版**」→「做过**几版**」、
+「另外**四个**文件夹」→「另外文件夹」（那句遗留的「那**四个**文件夹」没改，两个会话都照跑不误）。
+`cn:space-bunny` 会话的首条 user 消息为 509 字符、md5 `97030a7f8919c059c9c4c578d1f5052a`：
+
+```
+生成一个鹈鹕骑自行车的 3D 页面，尽可能把你所有的能力全部都用上。然后上传到 CDN，把访问链接给我。
+
+新建文件夹 C:/Users/admin/pi-cwd-20260916/pelican-bicycle-3d-arena/pages/pelican-bicycle-3d-<你的模型名>/ 来执行，所有产出都写在这个新文件夹里，入口是它的 index.html，不需要构建步骤就能直接打开。
+
+这个题目我之前已经让别的模型做过几版，成果就在 pages/ 下的另外文件夹里。本次全程不要读取、列出、搜索那四个文件夹里的任何内容，也不要看我的历史会话记录和我在网上发布的那几页——完全按你自己的思路写。除此之外联网随便用，教程素材都可以查。
+
+另外：这个目录已经在一个发布到 GitHub Pages 的 git 仓库里。不要 git init，不要新建仓库或子仓库，也不要在文件夹里留 .git。发布就直接把你自己的文件夹 commit 并 push 到当前仓库（只 add 你自己的文件夹，不要改动或提交其他文件）；如果没有推送权限或推送失败，停下来告诉我，不要另建仓库。
+
+拿不准的地方按你自己的判断做。
+```
+
+两条硬约束都守住了：两个目录里都没有嵌套 `.git`，都是只 add 自己那个目录后 commit + push 进本仓库
+（`5feeb29`、`2606d6f`、`b7253bc`、`fe1b9db` 四个 commit，做完 `git status` 干净）。
+`cn:kimi-k2.8-preview` 的 transcript 已丢失（只剩 `.acp.json`），它的首条 user 消息无法核对；
+按 `acp.log` 记的首轮 hostTokens，它比 `space-bunny` 少 124 token，差异来源不明，只能确定两者极接近。
+
+---
+
 ## 三、耗时、token 与费用
 
 统计来源：pi-web 本地会话库 `~/.pi/agent/sessions/--C--Users-admin-pi-cwd-20260916--/`，
@@ -114,16 +143,24 @@
 | `kimi-k3` | `01a0f254-1db0-7413-8032-34284369e49f` | **44.6 min** | 1,593,545 | 102,727 | 1,490,818 | 35 |
 | `gpt-5.6-sol` ⚠️ | `01a0f273-b1a7-7413-8032-342d8c4c9a52` | **12.3 min** | 957,424 | 64,123 | 893,301 | 30 |
 | `cn:glm-5.3` | `01a0f48d-d51e-7413-8032-34301b1c77b1` | **72.6 min** | 10,714,172 | 688,281 | 10,025,891 | 245 |
+| `cn:kimi-k2.8-preview` | `01a10bed-6fb9-70db-9a3f-7ae1f45f0ea2` ※ | **39.9 min** | 4,538,999 ＊ | — | — | 86 |
+| `cn:space-bunny` | `01a10bf8-d401-70db-9a3f-7ae6f2c878f1` | **356.5 min** | 46,446,495 | 1,141,987 | 45,304,508 | 618 |
 
 ※ `step-5-preview` 的 74.1 分钟是**纯建站任务**耗时（05:11:56 → 06:26:03 UTC，
 结束时已给出可用链接）。之后用户又追问了 3 轮「CDN 到底是怎么发布的」，会话拖到
 09:10:31 UTC 才结束，含追问的整段为 238.6 min、总 token 12,823,384。
 表中其余数字均为含追问的整段会话值；若只看建站任务，该会话为 12,110,890 / 637,738。
 
-九个会话耗时各段相加 **648.7 min ≈ 10.8 h**（第一批四个 269.5 min + 第二批四个 306.6 min + 第三批 72.6 min）。
+十一个会话耗时各段相加 **1045.1 min ≈ 17.4 h**（第一批四个 269.5 min + 第二批四个 306.6 min + 第三批 72.6 min + 第四批两个 396.4 min）。
 各会话各自独立计时，批内有重叠，不是墙上时间跨度：
 第一批为 05:11:56 → 11:29:44 UTC（跨度 6.3 h），第二批为 12:39:13 → 15:56:23 UTC（跨度 3.3 h），
-第三批为 2026-09-30 23:02:10 → 2026-10-01 00:14:44 UTC（跨度 1.2 h）。
+第三批为 2026-09-30 23:02:10 → 2026-10-01 00:14:44 UTC（跨度 1.2 h），
+第四批为 2026-10-05 11:57:52 → 18:06:49 UTC（跨度 6.2 h，两个会话背靠背起跑）。
+
+※ `cn:kimi-k2.8-preview` 的 transcript 已不在会话库里，只剩 `.acp.json`；它的 39.9 min / 86 轮 /
+总 token 4,538,999 是按 `acp.log` 里 86 条逐轮上下文 `tokens=` 相加推算的。
+拿 `cn:space-bunny` 做过交叉验证：同样的推算（46,626,449）与 usage 累加（46,446,495）差 0.39%，
+所以这个数字可以当量级用，但**非缓存 / 缓存读取列无数据源**，只能记「—」。
 
 ⚠️ 第 8 行 `gpt-5.6-sol` 那一轮模型被降智（见 §四 · 8），数字只作留档，不计入任何对比。
 
@@ -140,6 +177,8 @@
 | `kimi-k3` | 69,003 | 33,724 | 13,006 | 1,490,818 |
 | `gpt-5.6-sol` ⚠️ | 35,179 | 28,944 | 3,455 | 893,301 |
 | `cn:glm-5.3` | 548,387 | 139,894 | 85,083 | 10,025,891 |
+| `cn:space-bunny` | 868,295 | 273,692 | 59,541 | 45,304,508 |
+| `cn:kimi-k2.8-preview` ＊ | — | — | — | — |
 
 ### 费用总表（官方 API 定价 · 仅第一批 1–4）
 
@@ -173,7 +212,8 @@
 - ⚠️ `gpt-5.6-sol` 那一轮被降智，这一行只作留档，不要拿去比。
 - 四个新会话里另有 17 次 `cc/gpt-6-sol` 的调用（`kimi-k3` 会话 10 次、`gpt-5.6-sol` 会话 7 次）
   `usage` 全为 0 —— 那是编排用的空跑，不产生费用，也未计入轮次。
-- **全场合计：主会话 $38.47，含子代理 $42.52**（第二、三批无子代理）。
+- **全场合计：主会话 $38.47，含子代理 $42.52**（第二、三、四批无子代理）。
+- 第四批那两个**没有费用数据**：`models.json` 里 `cn:kimi-k2.8-preview` 与 `cn:space-bunny` 都没登记 `cost`（同族的 `kimi-k3` / `cn:glm-5.3` 都有），`cn:space-bunny` transcript 里 618 条 `usage` 的 `cost.total` 也全是 0，所以折算不出来，上表与否。
 - `cn:glm-5.3` 走 workbuddy 本地代理，登记单价 $1.4 / $4.4 / $0.26（输入 / 输出 / 缓存读），
   `usage.cost.total` 逐条相加为 $0.7677 + $0.6155 + $2.6067 = **$3.9900**，与按登记单价重算分毫不差；
   它也是这五个里每轮、每百万 token 最便宜的一个（$0.0163 / $0.372）。
@@ -224,10 +264,11 @@ token 不并入主会话，但钱确实花了：
 - 两者都写，是因为单看任何一个都会误导：只看总量会以为 deepseek 烧了 2290 万，
   但其中 2198 万是它自己反复重发的缓存；只看净量又会忽略单价差异
   （`gpt-6-astra` 净量最低仅 42 万，却是最贵的一档，$3.06/百万 token）。
-- 九个会话均在同一台机器上跑，第一批、第二批都在 2026-09-30 当天，第三批跨到 10-01 凌晨；
-  批内可横向比较，但两套费用口径不同（官方定价 vs provider 记账），**跨越口径比单价没有意义**。
+- 十一个会话均在同一台机器上跑，第一批、第二批都在 2026-09-30 当天，第三批跨到 10-01 凌晨，
+  第四批在 10-05；批内可横向比较，但两套费用口径不同（官方定价 vs provider 记账），**跨越口径比单价没有意义**。
 - 时间戳为 UTC，北京时间 = 表中 +8h（第一批：`gpt-6-astra` 本地 17:54 → 18:41；
-  第二批：`cn:hy4-preview` 本地 20:39 → 23:56；第三批：`cn:glm-5.3` 本地 10-01 07:02 → 08:14）。
+  第二批：`cn:hy4-preview` 本地 20:39 → 23:56；第三批：`cn:glm-5.3` 本地 10-01 07:02 → 08:14；
+  第四批：两个都在 10-05 晚间，本地 19:57 → 次日 02:06）。
 
 **费用口径：**
 
@@ -257,7 +298,7 @@ token 不并入主会话，但钱确实花了：
 
 ---
 
-## 四、九个页面分别是什么
+## 四、十一个页面分别是什么
 
 ### 1. `step-5-preview` — 鹈鹕骑行日记 · Pelican Ride 3D
 
@@ -377,13 +418,44 @@ WebAudio 全合成音效（风声随速度滤波、踏板咔哒、拾取琶音�
   （唯一一条是浏览器去要 `robotwizardt.github.io/favicon.ico` 拿到 404，因为它没声明 favicon）
 - 只有 1 条用户消息、245 轮；中途撞过着色器编译失败（`INVALID_OPERATION`），它自己修好了
 
+### 10. `cn:kimi-k2.8-preview` — Pelican on a Bicycle · 3D Arena
+
+`pages/pelican-bicycle-3d-kimi-k2.8-preview/`　耗时 39.9 min　4,538,999 token ＊ / 86 轮　费用 **—**（无价目）
+
+海边木板路上的落日海面。Three.js r160 本地内置在 `vendor/`（含 GLTFLoader / OrbitControls / SkeletonUtils），
+自行车、鹈鹕、画廊小屋全部代码生成。亮点是**自研 GPU 蒙皮**：把每段肢体包成「蒙皮盒」，
+顶点在 vertex shader 里按盒内位置做关节旋转，绕开了骨骼网格；另有两段自定义 GLSL——
+天空穹顶（渐变 + 太阳 + 星空 + 昼夜过渡）与海面（三波 Gerstner 顶点位移 + 程序法线 + Fresnel + 泡沫 + 雾）。
+几何机构是真的：齿比 `轮半径 / 牙盘半径 ≈ 3.82`，脚踏轨迹驱动双腿，踏频与速度联动。
+声音全部是 Web Audio 合成（海浪 / 风声 / 车铃 / 鹈鹕叫 / 捏闸），无任何音频文件。
+资源里有 4 张 AI 生成贴图，落日英雄图一张 6.1 MB —— 整包 8.9 MB，是 11 个页面里最重的；
+AI 贴图加载失败时有 Canvas 程序生成的木纹 / 天空 / 粒子贴图兜底。
+
+- 页面：`index.html` + `css/style.css` + `js/`（audio / bicycle / main / textures / vertexAnim / world）+ `vendor/` + `assets/textures/`，18 个文件
+- 交互：OrbitControls 相机、底部速度滑块、点击鹈鹕叫一声、空格捏闸、线框 / 自动环绕 / 昼夜切换；场景里有一座画廊小屋，墙上挂的 AI 油画跟底部画廊是同一张图（彩蛋）
+- 会话：`01a10bed-6fb9`，11:57:52 → 12:37:48 UTC（39.9 min），86 轮；transcript 已丢失
+
+### 11. `cn:space-bunny` — 灯塔邮路 · 鹈鹕骑自行车 | Pelican Post
+
+`pages/pelican-bicycle-3d-space-bunny/`　耗时 356.5 min　46,446,495 token / 618 轮　费用 **—**（无价目）
+
+大白鹈鹕踩着全蹼足、蹬邮政自行车，沿黄金时刻的海岬环岛送报。时间轴 0–24 h 连续可拖、
+天气与风力可调、三档画质，三种视角（追尾跟拍 / 手动驾驶 / 盘旋灯塔）；
+HUD 报速度 / 踏频 / 里程 / 环岛 / 投递 / 渔获六项，左下角滚冷知识卡片。
+海浪、风、车轮、鹈鹕叫声全是 Web Audio 合成的，零外部素材。
+开的是 max 思考档，所以跑出了全场最长的一场：**356.5 min / 618 轮 / 46.4 M token**，
+总 token 是第二多（`cn:deepseek-v4.1-flash` 22.9 M）的两倍多，缓存命中 97.5%。
+
+- 页面：`index.html` 直接引 `js/bundle.js`（2.0 MB 单包）+ `src/` 14 个模块（`scene/` 含着色器与地形、`creature/` 是鹈鹕与自行车、`state/ride.js` 是骑行状态机）+ `tools/build.mjs`，18 个文件 2.2 MB
+- 三个 commit 都是它自己提交的：`2606d6f` 初版 → `b7253bc` 修刹车卡死与路面近黑 → `fe1b9db` 降色散、调雾气与海面
+
 ---
 
 ## 五、目录结构
 
 ```
 pelican-bicycle-3d-arena/
-├── index.html                        落地页：九张卡片 + 九页入口
+├── index.html                        落地页：十一张卡片 + 十一页入口
 ├── README.md                         本文件：prompt / 耗时 / token / 结果页面
 ├── .nojekyll                         关掉 GitHub Pages 的 Jekyll 处理
 └── pages/
@@ -423,8 +495,17 @@ pelican-bicycle-3d-arena/
     │   ├── index.html  app.js  styles.css  favicon.svg
     │   ├── vendor/three.min.js      本地内置 three.js
     │   └── preview-desktop.png
-    └── pelican-bicycle-3d-cn-glm-5.3/        （第三批）
-        └── index.html                51 KB 单文件（three.js 走 jsDelivr）
+    ├── pelican-bicycle-3d-cn-glm-5.3/        （第三批）
+    │   └── index.html                51 KB 单文件（three.js 走 jsDelivr）
+    ├── pelican-bicycle-3d-kimi-k2.8-preview/ （第四批）
+    │   ├── index.html  css/style.css
+    │   ├── js/                       audio / bicycle / main / textures / vertexAnim / world
+    │   ├── vendor/                   three r160 + GLTFLoader / OrbitControls / SkeletonUtils
+    │   └── assets/textures/          4 张 AI 生成贴图（含 6.1 MB 落日图）
+    └── pelican-bicycle-3d-space-bunny/       （第四批）
+        ├── index.html  css/style.css
+        ├── js/bundle.js              2.0 MB 单包
+        └── src/                      14 个模块 + tools/build.mjs
 ```
 
 ---
@@ -470,6 +551,10 @@ python -m http.server 8080
    连 `index.html` 都没有，已删除，未收录。
 7. **第三批 1 个也是直接提交进本仓库的**（同一份 prompt 里的同一条要求），
    落在 `pages/pelican-bicycle-3d-cn-glm-5.3/`，整个目录只有它自己的 `index.html`。
+8. **第四批 2 个也是直接提交进本仓库的**（同一份 prompt 里的同一条要求），
+   落在 `pages/pelican-bicycle-3d-kimi-k2.8-preview/` 与 `pages/pelican-bicycle-3d-space-bunny/`。
+   两个目录里都没有嵌套 `.git`（那条「不要 git init」的约束生效了），也没有改动 `index.html` / `README.md`
+   —— 本落地页和这份说明是事后由我补写的。
 
 ---
 
@@ -482,3 +567,8 @@ python -m http.server 8080
 - `cn:hy4-preview` 的网关缓存命中率很低，想重跑一遍的费用会很可观。
 - `cn:hy4-preview` 与 `cn:glm-5.3` 都没声明 favicon，浏览器会去账号根要 `favicon.ico` 拿到 404（不影响画面，控制台里那条红字就是它）。
 - jsDelivr 镜像的 `.html` 是 `text/plain`，只适合下载，不适合直接当页面入口。
+- `cn:kimi-k2.8-preview` 的会话 transcript 已不在本地会话库（`01a10bed-6fb9` 只剩 `.acp.json`），
+  它的非缓存 token 无处可查，表里记「—」；同一批的 `cn:space-bunny` 不受影响。
+- 第四批两个模型在 `models.json` 里都没登记单价，provider 也没回记 `cost`，所以它们的费用无法折算，
+  总花费 $38.47 / $42.52 仍只覆盖 1–9。
+- `cn:kimi-k2.8-preview` 的页面最重（8.9 MB，其中 6.1 MB 是一张 AI 落日图）；`cn:space-bunny` 的 `bundle.js` 2.0 MB 未压缩。
